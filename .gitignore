@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Environment
+.env
+*.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+.next/
+out/
+dist/
+
+# Backend outputs
+backend/outputs/
+backend/prompt_library.json
+backend/outputs/_ref_cache/
+
+# Misc
+*.log
+npm-debug.log*
