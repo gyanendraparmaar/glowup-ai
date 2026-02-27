@@ -74,9 +74,9 @@ class ImageEnhancerAgent:
                     if part.inline_data and part.inline_data.data:
                         return part.inline_data.data
 
-            print("     ⚠️ No image in response")
+            print("     [!] No image in response")
             return None
 
         except Exception as e:
-            print(f"     ❌ Generation error: {e}")
+            print(f"     [ERROR] Generation error: {e}")
             return None

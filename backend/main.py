@@ -75,7 +75,7 @@ async def enhance_photo(
         content = await file.read()
         f.write(content)
 
-    print(f"\n🚀 New enhancement job: {job_id}")
+    print(f"\n[NEW JOB] New enhancement job: {job_id}")
     print(f"   Mode: {'vibe (' + vibe + ')' if vibe else 'enhance'}")
     print(f"   Variations: {num_variations}")
 
@@ -101,7 +101,7 @@ async def enhance_photo(
         }
 
     except Exception as e:
-        print(f"❌ Pipeline error: {e}")
+        print(f"[ERROR] Pipeline error: {e}")
         raise HTTPException(status_code=500, detail=f"Enhancement failed: {str(e)}")
 
 

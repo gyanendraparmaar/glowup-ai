@@ -38,7 +38,7 @@ class PhotoScoutAgent:
         count = count or config.NUM_SCOUT_REFS
 
         # Step 1: Analyze the user's photo to understand what to search for
-        print("     📸 Analyzing photo characteristics...")
+        print("     [+] Analyzing photo characteristics...")
         analysis = await self.analysis.analyze_photo(user_photo_path)
 
         # Step 2: Build search query
@@ -52,7 +52,7 @@ class PhotoScoutAgent:
                 f"professional portrait {analysis.get('setting', '')} photography"
             )
 
-        print(f"     🔍 Searching: \"{query}\"")
+        print(f"     [*] Searching: \"{query}\"")
 
         # Step 3: Search for matching photos
         search_results = await self.search.search_images(
@@ -60,7 +60,7 @@ class PhotoScoutAgent:
         )
 
         if not search_results:
-            print("     ⚠️ No search results found, using photo as-is")
+            print("     [!] No search results found, using photo as-is")
             return []
 
         # Step 4: Download the top matches
@@ -73,7 +73,7 @@ class PhotoScoutAgent:
                 downloaded.append(path)
                 src = result.get("source", "web")
                 photographer = result.get("photographer", "unknown")
-                print(f"     ✅ Ref {len(downloaded)}: {src} by {photographer}")
+                print(f"     [+] Ref {len(downloaded)}: {src} by {photographer}")
 
         # Also store the analysis for the Prompt Architect to use
         self._last_analysis = analysis

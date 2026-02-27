@@ -55,7 +55,7 @@ class WebSearchMCP:
                             "photographer": photo["user"]["name"],
                         })
             except Exception as e:
-                print(f"  ⚠️ Unsplash search failed: {e}")
+                print(f"  [!] Unsplash search failed: {e}")
 
         # --- Pexels (fallback / supplement) ---
         if self.pexels_key and len(results) < count:
@@ -82,7 +82,7 @@ class WebSearchMCP:
                             "photographer": photo.get("photographer", ""),
                         })
             except Exception as e:
-                print(f"  ⚠️ Pexels search failed: {e}")
+                print(f"  [!] Pexels search failed: {e}")
 
         return results[:count]
 
@@ -103,5 +103,5 @@ class WebSearchMCP:
                     f.write(resp.content)
                 return local_path
         except Exception as e:
-            print(f"  ⚠️ Download failed for {url[:60]}...: {e}")
+            print(f"  [!] Download failed for {url[:60]}...: {e}")
             return None
