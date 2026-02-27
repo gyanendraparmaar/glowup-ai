@@ -27,9 +27,9 @@ class Config:
 
 
     # Models
-    PROMPT_MODEL: str = "gemini-2.5-flash"
-    IMAGE_MODEL: str = "gemini-2.0-flash-exp"  # Nano Banana Pro / image generation model
-    QUALITY_MODEL: str = "gemini-2.5-pro"
+    PROMPT_MODEL: str = "gemini-2.0-flash"
+    IMAGE_MODEL: str = "gemini-2.0-flash-preview-image-generation"
+    QUALITY_MODEL: str = "gemini-2.0-flash"
 
 
 config = Config()
