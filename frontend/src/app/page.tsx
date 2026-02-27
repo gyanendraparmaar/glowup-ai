@@ -8,10 +8,14 @@ import ResultGallery from "@/components/ResultGallery";
 
 type AppState = "idle" | "uploaded" | "processing" | "done" | "error";
 
-interface EnhanceResult {
-  job_id: string;
-  images: string[];
-  original: string;
+interface PhotoEntry {
+  file: File;
+  preview: string;
+}
+
+interface PhotoResult {
+  originalUrl: string;
+  enhancedUrls: string[];
 }
 
 const STAGE_MESSAGES = [
@@ -25,52 +29,64 @@ const STAGE_MESSAGES = [
 export default function Home() {
   /* ── State ── */
   const [appState, setAppState] = useState<AppState>("idle");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [photos, setPhotos] = useState<PhotoEntry[]>([]);
   const [selectedVibe, setSelectedVibe] = useState<string | null>(null);
   const [numVariations, setNumVariations] = useState(2);
 
   const [stage, setStage] = useState(0);
   const [progress, setProgress] = useState(0);
   const [stageMessage, setStageMessage] = useState("");
+  const [processingLabel, setProcessingLabel] = useState("");
 
-  const [result, setResult] = useState<EnhanceResult | null>(null);
+  const [results, setResults] = useState<PhotoResult[]>([]);
   const [errorMsg, setErrorMsg] = useState("");
 
   const progressTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  /* ── Cleanup timer ── */
   useEffect(() => {
     return () => {
       if (progressTimer.current) clearInterval(progressTimer.current);
     };
   }, []);
 
-  /* ── Photo Selected ── */
-  const handleFileSelected = useCallback((file: File, preview: string) => {
-    setSelectedFile(file);
-    setPreviewUrl(preview);
-    setAppState("uploaded");
-    setResult(null);
-    setErrorMsg("");
+  /* ── Photos Selected ── */
+  const handleFilesSelected = useCallback(
+    (newFiles: { file: File; preview: string }[]) => {
+      setPhotos((prev) => [...prev, ...newFiles].slice(0, 5));
+      setAppState("uploaded");
+      setResults([]);
+      setErrorMsg("");
+    },
+    []
+  );
+
+  /* ── Remove a photo ── */
+  const handleRemovePhoto = useCallback((index: number) => {
+    setPhotos((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      if (next.length === 0) return next;
+      return next;
+    });
+    setPhotos((prev) => {
+      if (prev.length === 0) {
+        setAppState("idle");
+      }
+      return prev;
+    });
   }, []);
 
-  /* ── Simulated Progress ── */
+  /* ── Progress Simulation ── */
   const startProgressSimulation = useCallback(() => {
     let currentProgress = 0;
     let currentStage = 0;
-
     setStage(0);
     setProgress(0);
     setStageMessage(STAGE_MESSAGES[0]);
 
     progressTimer.current = setInterval(() => {
-      // Slowly increment progress
       const increment = Math.random() * 2 + 0.5;
-      currentProgress = Math.min(currentProgress + increment, 92); // Cap at 92% until real completion
+      currentProgress = Math.min(currentProgress + increment, 92);
       setProgress(currentProgress);
-
-      // Advance stages based on progress thresholds
       const newStage =
         currentProgress < 15
           ? 0
@@ -81,7 +97,6 @@ export default function Home() {
               : currentProgress < 80
                 ? 3
                 : 4;
-
       if (newStage !== currentStage) {
         currentStage = newStage;
         setStage(currentStage);
@@ -96,61 +111,82 @@ export default function Home() {
       progressTimer.current = null;
     }
     setProgress(100);
-    setStage(5); // all done
+    setStage(5);
     setStageMessage("");
   }, []);
 
-  /* ── Enhance ── */
+  /* ── Enhance All Photos ── */
   const handleEnhance = useCallback(async () => {
-    if (!selectedFile) return;
+    if (photos.length === 0) return;
 
     setAppState("processing");
-    setResult(null);
+    setResults([]);
     setErrorMsg("");
-    startProgressSimulation();
 
-    try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      if (selectedVibe) formData.append("vibe", selectedVibe);
-      formData.append("num_variations", String(numVariations));
+    const allResults: PhotoResult[] = [];
 
-      const response = await fetch("/api/enhance", {
-        method: "POST",
-        body: formData,
-      });
+    for (let i = 0; i < photos.length; i++) {
+      setProcessingLabel(
+        photos.length > 1
+          ? `Photo ${i + 1} of ${photos.length}`
+          : ""
+      );
+      startProgressSimulation();
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => null);
-        throw new Error(errData?.detail || `Server error ${response.status}`);
+      try {
+        const formData = new FormData();
+        formData.append("file", photos[i].file);
+        if (selectedVibe) formData.append("vibe", selectedVibe);
+        formData.append("num_variations", String(numVariations));
+
+        const response = await fetch("/api/enhance", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => null);
+          throw new Error(
+            errData?.detail || `Server error ${response.status}`
+          );
+        }
+
+        const data = await response.json();
+        stopProgressSimulation();
+
+        allResults.push({
+          originalUrl: photos[i].preview,
+          enhancedUrls: data.images,
+        });
+      } catch (err) {
+        stopProgressSimulation();
+        setErrorMsg(
+          `Photo ${i + 1}: ${err instanceof Error ? err.message : "Something went wrong"}`
+        );
+        setAppState("error");
+        setResults(allResults); // show partial results
+        return;
       }
-
-      const data = await response.json();
-
-      stopProgressSimulation();
-      setResult(data);
-      setAppState("done");
-    } catch (err) {
-      stopProgressSimulation();
-      setErrorMsg(err instanceof Error ? err.message : "Something went wrong");
-      setAppState("error");
     }
-  }, [selectedFile, selectedVibe, numVariations, startProgressSimulation, stopProgressSimulation]);
+
+    setResults(allResults);
+    setProcessingLabel("");
+    setAppState("done");
+  }, [photos, selectedVibe, numVariations, startProgressSimulation, stopProgressSimulation]);
 
   /* ── Reset ── */
   const handleReset = useCallback(() => {
     setAppState("idle");
-    setSelectedFile(null);
-    setPreviewUrl("");
+    setPhotos([]);
     setSelectedVibe(null);
-    setResult(null);
+    setResults([]);
     setErrorMsg("");
     setProgress(0);
     setStage(0);
     setStageMessage("");
+    setProcessingLabel("");
   }, []);
 
-  /* ── Render ── */
   const isProcessing = appState === "processing";
 
   return (
@@ -165,14 +201,7 @@ export default function Home() {
     >
       {/* ═══ Hero ═══ */}
       <header style={{ textAlign: "center", marginBottom: "48px" }}>
-        <div
-          style={{
-            fontSize: "48px",
-            marginBottom: "12px",
-          }}
-        >
-          🔥
-        </div>
+        <div style={{ fontSize: "48px", marginBottom: "12px" }}>🔥</div>
         <h1
           style={{
             fontSize: "36px",
@@ -192,75 +221,157 @@ export default function Home() {
             lineHeight: 1.6,
           }}
         >
-          Upload your photo → 5 AI agents enhance it → Download stunning,
-          realistic results
+          Upload up to 5 photos → AI agents enhance them → Download stunning
+          results
         </p>
       </header>
 
       {/* ═══ Main Card ═══ */}
       <div
         className="glass-card"
-        style={{
-          padding: "32px",
-          marginBottom: "24px",
-        }}
+        style={{ padding: "32px", marginBottom: "24px" }}
       >
-        {/* Upload Area or Preview */}
-        {!previewUrl ? (
-          <PhotoUploader
-            onFileSelected={handleFileSelected}
-            disabled={isProcessing}
-          />
-        ) : (
-          <div className="fade-in">
-            {/* Preview Image */}
+        {/* Photo Thumbnails */}
+        {photos.length > 0 && (
+          <div className="fade-in" style={{ marginBottom: "20px" }}>
             <div
               style={{
-                borderRadius: "14px",
-                overflow: "hidden",
-                marginBottom: "20px",
-                position: "relative",
+                display: "grid",
+                gridTemplateColumns: "repeat(5, 1fr)",
+                gap: "10px",
+                marginBottom: "16px",
               }}
             >
-              <img
-                src={previewUrl}
-                alt="Your uploaded photo"
-                style={{
-                  width: "100%",
-                  maxHeight: "400px",
-                  objectFit: "contain",
-                  display: "block",
-                  background: "rgba(0,0,0,0.3)",
-                }}
-              />
-              {!isProcessing && appState !== "done" && (
-                <button
-                  onClick={handleReset}
+              {photos.map((photo, i) => (
+                <div
+                  key={i}
                   style={{
-                    position: "absolute",
-                    top: "12px",
-                    right: "12px",
-                    background: "rgba(0,0,0,0.6)",
-                    backdropFilter: "blur(8px)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    color: "var(--text-primary)",
-                    borderRadius: "8px",
-                    padding: "6px 12px",
-                    fontSize: "13px",
+                    position: "relative",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    border: "1px solid var(--border-subtle)",
+                    aspectRatio: "1",
+                  }}
+                >
+                  <img
+                    src={photo.preview}
+                    alt={`Photo ${i + 1}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                  {!isProcessing && appState !== "done" && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemovePhoto(i);
+                      }}
+                      style={{
+                        position: "absolute",
+                        top: "4px",
+                        right: "4px",
+                        width: "22px",
+                        height: "22px",
+                        borderRadius: "50%",
+                        background: "rgba(0,0,0,0.7)",
+                        border: "none",
+                        color: "white",
+                        fontSize: "12px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        lineHeight: 1,
+                      }}
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "4px",
+                      left: "4px",
+                      background: "rgba(0,0,0,0.6)",
+                      color: "white",
+                      fontSize: "10px",
+                      fontWeight: 700,
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {i + 1}
+                  </div>
+                </div>
+              ))}
+
+              {/* Add More Slot */}
+              {photos.length < 5 && !isProcessing && appState !== "done" && (
+                <div
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "image/*";
+                    input.multiple = true;
+                    input.onchange = (e) => {
+                      const files = (e.target as HTMLInputElement).files;
+                      if (!files) return;
+                      const fileArray = Array.from(files)
+                        .filter((f) => f.type.startsWith("image/"))
+                        .slice(0, 5 - photos.length);
+                      let processed: { file: File; preview: string }[] = [];
+                      let count = 0;
+                      fileArray.forEach((file) => {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                          processed.push({
+                            file,
+                            preview: reader.result as string,
+                          });
+                          count++;
+                          if (count === fileArray.length) {
+                            handleFilesSelected(processed);
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      });
+                    };
+                    input.click();
+                  }}
+                  style={{
+                    borderRadius: "12px",
+                    border: "2px dashed rgba(168, 85, 247, 0.25)",
+                    aspectRatio: "1",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                     cursor: "pointer",
-                    transition: "background 0.2s",
+                    transition: "all 0.2s",
+                    gap: "2px",
                   }}
                   onMouseEnter={(e) =>
-                  ((e.target as HTMLElement).style.background =
-                    "rgba(0,0,0,0.8)")
+                  ((e.currentTarget as HTMLElement).style.borderColor =
+                    "var(--accent-purple)")
                   }
                   onMouseLeave={(e) =>
-                  ((e.target as HTMLElement).style.background =
-                    "rgba(0,0,0,0.6)")
+                  ((e.currentTarget as HTMLElement).style.borderColor =
+                    "rgba(168, 85, 247, 0.25)")
                   }
                 >
-                  ✕ Change photo
-                </button>
+                  <span style={{ fontSize: "20px" }}>+</span>
+                  <span
+                    style={{
+                      fontSize: "10px",
+                      color: "var(--text-muted)",
+                    }}
+                  >
+                    Add
+                  </span>
+                </div>
               )}
             </div>
 
@@ -287,7 +398,7 @@ export default function Home() {
                 <span
                   style={{ fontSize: "13px", color: "var(--text-secondary)" }}
                 >
-                  Variations:
+                  Variations per photo:
                 </span>
                 <input
                   type="range"
@@ -327,20 +438,47 @@ export default function Home() {
                   gap: "8px",
                 }}
               >
-                ✨ Enhance Photo
+                ✨ Enhance {photos.length} Photo
+                {photos.length > 1 ? "s" : ""}
               </button>
             )}
           </div>
         )}
+
+        {/* Drop Zone (when no photos or room for more) */}
+        {photos.length === 0 && (
+          <PhotoUploader
+            onFilesSelected={handleFilesSelected}
+            currentCount={photos.length}
+            disabled={isProcessing}
+          />
+        )}
       </div>
 
       {/* ═══ Progress ═══ */}
-      <ProgressDisplay
-        visible={isProcessing}
-        currentStage={stage}
-        stageMessage={stageMessage}
-        progress={progress}
-      />
+      {isProcessing && (
+        <div>
+          {processingLabel && (
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "14px",
+                fontWeight: 600,
+                color: "var(--accent-purple)",
+                marginBottom: "12px",
+              }}
+            >
+              {processingLabel}
+            </p>
+          )}
+          <ProgressDisplay
+            visible={true}
+            currentStage={stage}
+            stageMessage={stageMessage}
+            progress={progress}
+          />
+        </div>
+      )}
 
       {/* ═══ Error ═══ */}
       {appState === "error" && (
@@ -392,13 +530,7 @@ export default function Home() {
       )}
 
       {/* ═══ Results ═══ */}
-      {result && (
-        <ResultGallery
-          originalUrl={previewUrl}
-          enhancedUrls={result.images}
-          visible={appState === "done"}
-        />
-      )}
+      <ResultGallery results={results} visible={appState === "done" || (appState === "error" && results.length > 0)} />
 
       {/* ═══ Done — Enhance Another ═══ */}
       {appState === "done" && (
@@ -416,17 +548,15 @@ export default function Home() {
               transition: "all 0.2s",
             }}
             onMouseEnter={(e) => {
-              (e.target as HTMLElement).style.borderColor =
-                "var(--border-glow)";
+              (e.target as HTMLElement).style.borderColor = "var(--border-glow)";
               (e.target as HTMLElement).style.color = "var(--text-primary)";
             }}
             onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.borderColor =
-                "var(--border-subtle)";
+              (e.target as HTMLElement).style.borderColor = "var(--border-subtle)";
               (e.target as HTMLElement).style.color = "var(--text-secondary)";
             }}
           >
-            ✨ Enhance Another Photo
+            ✨ Enhance More Photos
           </button>
         </div>
       )}

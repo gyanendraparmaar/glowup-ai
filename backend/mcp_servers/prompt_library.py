@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Prompt Library MCP Server — stores and retrieves successful prompt patterns."""
 
 import json

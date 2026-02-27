@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Web Search MCP Server — searches Unsplash and Pexels for reference photos."""
 
 import httpx

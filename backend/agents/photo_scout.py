@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Photo Scout Agent — finds professional reference photos from the web."""
 
 from mcp_servers.web_search import WebSearchMCP

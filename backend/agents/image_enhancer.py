@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Image Enhancer Agent — generates enhanced images using Nano Banana Pro."""
 
 from PIL import Image

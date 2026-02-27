@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Prompt Architect Agent — analyzes all inputs and writes the perfect prompt."""
 
 from PIL import Image

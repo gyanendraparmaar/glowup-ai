@@ -3,27 +3,46 @@
 import React, { useCallback, useRef, useState } from "react";
 
 interface PhotoUploaderProps {
-    onFileSelected: (file: File, preview: string) => void;
+    onFilesSelected: (files: { file: File; preview: string }[]) => void;
+    currentCount: number;
     disabled?: boolean;
 }
 
+const MAX_PHOTOS = 5;
+
 export default function PhotoUploader({
-    onFileSelected,
+    onFilesSelected,
+    currentCount,
     disabled,
 }: PhotoUploaderProps) {
     const [dragOver, setDragOver] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const handleFile = useCallback(
-        (file: File) => {
-            if (!file.type.startsWith("image/")) return;
-            const reader = new FileReader();
-            reader.onload = () => {
-                onFileSelected(file, reader.result as string);
-            };
-            reader.readAsDataURL(file);
+    const handleFiles = useCallback(
+        (fileList: FileList | File[]) => {
+            const files = Array.from(fileList).filter((f) =>
+                f.type.startsWith("image/")
+            );
+            const remaining = MAX_PHOTOS - currentCount;
+            const toProcess = files.slice(0, remaining);
+            if (toProcess.length === 0) return;
+
+            let processed: { file: File; preview: string }[] = [];
+            let count = 0;
+
+            toProcess.forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    processed.push({ file, preview: reader.result as string });
+                    count++;
+                    if (count === toProcess.length) {
+                        onFilesSelected(processed);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
         },
-        [onFileSelected]
+        [onFilesSelected, currentCount]
     );
 
     const onDrop = useCallback(
@@ -31,10 +50,9 @@ export default function PhotoUploader({
             e.preventDefault();
             setDragOver(false);
             if (disabled) return;
-            const file = e.dataTransfer.files[0];
-            if (file) handleFile(file);
+            handleFiles(e.dataTransfer.files);
         },
-        [disabled, handleFile]
+        [disabled, handleFiles]
     );
 
     const onDragOver = useCallback(
@@ -53,11 +71,13 @@ export default function PhotoUploader({
 
     const onInputChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
-            const file = e.target.files?.[0];
-            if (file) handleFile(file);
+            if (e.target.files) handleFiles(e.target.files);
+            e.target.value = "";
         },
-        [handleFile]
+        [handleFiles]
     );
+
+    const spotsLeft = MAX_PHOTOS - currentCount;
 
     return (
         <div
@@ -69,19 +89,19 @@ export default function PhotoUploader({
             style={{
                 padding: "48px 32px",
                 textAlign: "center",
-                opacity: disabled ? 0.5 : 1,
-                pointerEvents: disabled ? "none" : "auto",
+                opacity: disabled || spotsLeft <= 0 ? 0.5 : 1,
+                pointerEvents: disabled || spotsLeft <= 0 ? "none" : "auto",
             }}
         >
             <input
                 ref={inputRef}
                 type="file"
                 accept="image/*"
+                multiple
                 onChange={onInputChange}
                 style={{ display: "none" }}
             />
 
-            {/* Upload Icon */}
             <div
                 style={{
                     fontSize: "48px",
@@ -101,7 +121,11 @@ export default function PhotoUploader({
                     marginBottom: "8px",
                 }}
             >
-                {dragOver ? "Drop it here!" : "Drop your photo here"}
+                {dragOver
+                    ? "Drop them here!"
+                    : currentCount === 0
+                        ? "Drop your photos here"
+                        : `Add more photos (${spotsLeft} spot${spotsLeft !== 1 ? "s" : ""} left)`}
             </p>
 
             <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
@@ -111,7 +135,7 @@ export default function PhotoUploader({
                 >
                     browse files
                 </span>{" "}
-                · JPG, PNG up to 10 MB
+                · Up to {MAX_PHOTOS} photos · JPG, PNG
             </p>
         </div>
     );

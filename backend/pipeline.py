@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Pipeline Orchestrator — runs the full 5-agent enhancement pipeline."""
 
 from agents.photo_scout import PhotoScoutAgent

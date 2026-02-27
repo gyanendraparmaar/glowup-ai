@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Storage MCP Server — local filesystem storage for the demo."""
 
 import os

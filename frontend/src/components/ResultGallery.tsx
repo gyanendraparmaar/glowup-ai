@@ -2,27 +2,32 @@
 
 import React from "react";
 
-interface ResultGalleryProps {
+interface PhotoResult {
     originalUrl: string;
     enhancedUrls: string[];
+}
+
+interface ResultGalleryProps {
+    results: PhotoResult[];
     visible: boolean;
 }
 
 export default function ResultGallery({
-    originalUrl,
-    enhancedUrls,
+    results,
     visible,
 }: ResultGalleryProps) {
-    if (!visible || enhancedUrls.length === 0) return null;
+    if (!visible || results.length === 0) return null;
 
-    const handleDownload = async (url: string, index: number) => {
+    const allEnhanced = results.flatMap((r) => r.enhancedUrls);
+
+    const handleDownload = async (url: string, name: string) => {
         try {
             const response = await fetch(url);
             const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = blobUrl;
-            a.download = `glowup-enhanced-${index + 1}.jpg`;
+            a.download = name;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -33,10 +38,14 @@ export default function ResultGallery({
     };
 
     const handleDownloadAll = async () => {
-        for (let i = 0; i < enhancedUrls.length; i++) {
-            await handleDownload(enhancedUrls[i], i);
-            // Small delay between downloads
-            await new Promise((r) => setTimeout(r, 500));
+        for (let r = 0; r < results.length; r++) {
+            for (let i = 0; i < results[r].enhancedUrls.length; i++) {
+                await handleDownload(
+                    results[r].enhancedUrls[i],
+                    `glowup-photo${r + 1}-v${i + 1}.jpg`
+                );
+                await new Promise((resolve) => setTimeout(resolve, 400));
+            }
         }
     };
 
@@ -48,25 +57,18 @@ export default function ResultGallery({
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    marginBottom: "20px",
+                    marginBottom: "24px",
                 }}
             >
                 <div>
-                    <h2
-                        style={{
-                            fontSize: "24px",
-                            fontWeight: 700,
-                            marginBottom: "4px",
-                        }}
-                    >
+                    <h2 style={{ fontSize: "24px", fontWeight: 700, marginBottom: "4px" }}>
                         ✨ Your Enhanced Photos
                     </h2>
                     <p style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
-                        {enhancedUrls.length} variation{enhancedUrls.length > 1 ? "s" : ""}{" "}
-                        generated
+                        {results.length} photo{results.length > 1 ? "s" : ""} ·{" "}
+                        {allEnhanced.length} variation{allEnhanced.length > 1 ? "s" : ""}
                     </p>
                 </div>
-
                 <button
                     className="btn-gradient"
                     onClick={handleDownloadAll}
@@ -82,96 +84,117 @@ export default function ResultGallery({
                 </button>
             </div>
 
-            {/* Results Grid */}
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: `repeat(${Math.min(enhancedUrls.length + 1, 3)}, 1fr)`,
-                    gap: "16px",
-                }}
-            >
-                {/* Original */}
-                <div className="glass-card" style={{ overflow: "hidden" }}>
-                    <div
-                        style={{
-                            padding: "8px 12px",
-                            borderBottom: "1px solid var(--border-subtle)",
-                            fontSize: "12px",
-                            fontWeight: 600,
-                            color: "var(--text-muted)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.05em",
-                        }}
-                    >
-                        Original
-                    </div>
-                    <img
-                        src={originalUrl}
-                        alt="Original photo"
-                        style={{
-                            width: "100%",
-                            height: "auto",
-                            display: "block",
-                        }}
-                    />
-                </div>
-
-                {/* Enhanced */}
-                {enhancedUrls.map((url, i) => (
-                    <div
-                        key={i}
-                        className="result-card glass-card fade-in"
-                        style={{ animationDelay: `${i * 0.15}s`, opacity: 0 }}
-                    >
-                        <div
+            {/* Per-photo result groups */}
+            {results.map((photoResult, photoIdx) => (
+                <div
+                    key={photoIdx}
+                    className="fade-in"
+                    style={{
+                        marginBottom: photoIdx < results.length - 1 ? "32px" : 0,
+                        animationDelay: `${photoIdx * 0.2}s`,
+                        opacity: 0,
+                    }}
+                >
+                    {results.length > 1 && (
+                        <p
                             style={{
-                                padding: "8px 12px",
-                                borderBottom: "1px solid var(--border-subtle)",
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
+                                fontSize: "13px",
+                                fontWeight: 600,
+                                color: "var(--text-muted)",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.05em",
+                                marginBottom: "12px",
                             }}
                         >
-                            <span
+                            Photo {photoIdx + 1}
+                        </p>
+                    )}
+
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${Math.min(photoResult.enhancedUrls.length + 1, 3)}, 1fr)`,
+                            gap: "14px",
+                        }}
+                    >
+                        {/* Original */}
+                        <div className="glass-card" style={{ overflow: "hidden" }}>
+                            <div
                                 style={{
-                                    fontSize: "12px",
+                                    padding: "6px 12px",
+                                    borderBottom: "1px solid var(--border-subtle)",
+                                    fontSize: "11px",
                                     fontWeight: 600,
+                                    color: "var(--text-muted)",
                                     textTransform: "uppercase",
                                     letterSpacing: "0.05em",
                                 }}
                             >
-                                <span className="gradient-text">Enhanced #{i + 1}</span>
-                            </span>
-                        </div>
-                        <div style={{ position: "relative" }}>
+                                Original
+                            </div>
                             <img
-                                src={url}
-                                alt={`Enhanced variation ${i + 1}`}
-                                style={{
-                                    width: "100%",
-                                    height: "auto",
-                                    display: "block",
-                                }}
+                                src={photoResult.originalUrl}
+                                alt={`Original photo ${photoIdx + 1}`}
+                                style={{ width: "100%", height: "auto", display: "block" }}
                             />
-                            <div className="overlay">
-                                <button
-                                    className="btn-gradient"
-                                    onClick={() => handleDownload(url, i)}
+                        </div>
+
+                        {/* Enhanced variations */}
+                        {photoResult.enhancedUrls.map((url, i) => (
+                            <div
+                                key={i}
+                                className="result-card glass-card fade-in"
+                                style={{ animationDelay: `${(photoIdx * 3 + i) * 0.12}s`, opacity: 0 }}
+                            >
+                                <div
                                     style={{
-                                        padding: "8px 18px",
-                                        fontSize: "13px",
+                                        padding: "6px 12px",
+                                        borderBottom: "1px solid var(--border-subtle)",
                                         display: "flex",
+                                        justifyContent: "space-between",
                                         alignItems: "center",
-                                        gap: "6px",
                                     }}
                                 >
-                                    📥 Download
-                                </button>
+                                    <span
+                                        style={{
+                                            fontSize: "11px",
+                                            fontWeight: 600,
+                                            textTransform: "uppercase",
+                                            letterSpacing: "0.05em",
+                                        }}
+                                    >
+                                        <span className="gradient-text">Enhanced #{i + 1}</span>
+                                    </span>
+                                </div>
+                                <div style={{ position: "relative" }}>
+                                    <img
+                                        src={url}
+                                        alt={`Enhanced photo ${photoIdx + 1} variation ${i + 1}`}
+                                        style={{ width: "100%", height: "auto", display: "block" }}
+                                    />
+                                    <div className="overlay">
+                                        <button
+                                            className="btn-gradient"
+                                            onClick={() =>
+                                                handleDownload(url, `glowup-photo${photoIdx + 1}-v${i + 1}.jpg`)
+                                            }
+                                            style={{
+                                                padding: "8px 16px",
+                                                fontSize: "13px",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: "6px",
+                                            }}
+                                        >
+                                            📥 Download
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
         </div>
     );
 }
