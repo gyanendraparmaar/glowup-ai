@@ -55,7 +55,7 @@ async def run_enhancement_pipeline(
     # STEP 1: Photo Scout — find reference images from the web
     # ═══════════════════════════════════════════════════════════════
     print("\n" + "=" * 60)
-    print("📸 STEP 1: Photo Scout Agent")
+    print("[STEP 1] Photo Scout Agent")
     print("=" * 60)
     references = await scout.find_references(original_path, vibe=vibe)
     photo_analysis = scout.last_analysis
@@ -75,7 +75,7 @@ async def run_enhancement_pipeline(
         # ═══════════════════════════════════════════════════════════
         # STEP 2: Prompt Architect — write the enhancement prompt
         # ═══════════════════════════════════════════════════════════
-        print("\n  ✍️  STEP 2: Prompt Architect Agent")
+        print("\n  [STEP 2] Prompt Architect Agent")
         prompt = await architect.generate_prompt(
             original_path,
             references,
@@ -93,7 +93,7 @@ async def run_enhancement_pipeline(
 
         for attempt in range(max_retries + 1):
             # --- Step 3: Generate ---
-            print(f"\n  🎨 STEP 3: Image Enhancer Agent (attempt {attempt + 1}/{max_retries + 1})")
+            print(f"\n  [STEP 3] Image Enhancer Agent (attempt {attempt + 1}/{max_retries + 1})")
             enhanced_bytes = await enhancer.enhance(
                 original_path,
                 prompt,
@@ -102,13 +102,13 @@ async def run_enhancement_pipeline(
             )
 
             if not enhanced_bytes:
-                print("     ⚠️ Empty result from generator")
+                print("     [!] Empty result from generator")
                 continue
 
             print(f"     Generated image: {len(enhanced_bytes):,} bytes")
 
             # --- Step 4: Quality Check ---
-            print(f"\n  🔍 STEP 4: Quality Inspector Agent")
+            print(f"\n  [STEP 4] Quality Inspector Agent")
             score = await inspector.evaluate(enhanced_bytes, original_path)
 
             overall = score.get("overall", 0)
@@ -118,13 +118,13 @@ async def run_enhancement_pipeline(
 
             print(f"     Overall: {overall}/10")
             print(f"     AI Detection Risk: {ai_risk}/10")
-            print(f"     Verdict: {'✅ PASS' if verdict == 'PASS' else '❌ FAIL'}")
+            print(f"     Verdict: {'[PASS]' if verdict == 'PASS' else '[FAIL]'}")
 
             if verdict == "PASS":
                 # Save successful prompt to library for future learning
                 scenario = f"{vibe}_vibe" if vibe else "default_enhance"
                 await inspector.save_result(prompt, score, scenario)
-                print("     📚 Prompt saved to library for future learning")
+                print("     [+] Prompt saved to library for future learning")
                 break
 
             # Show failure reasons
@@ -133,7 +133,7 @@ async def run_enhancement_pipeline(
 
             # Retry: ask Prompt Architect to fix the prompt
             if attempt < max_retries:
-                print(f"\n  🔄 Retrying — asking Prompt Architect to fix the prompt...")
+                print(f"\n  [RETRY] Retrying — asking Prompt Architect to fix the prompt...")
                 fix_inputs = score.get("fix_suggestions", []) + issues
                 prompt = await architect.fix_prompt(
                     original_path, prompt, fix_inputs, vibe
@@ -141,20 +141,20 @@ async def run_enhancement_pipeline(
                 print(f"     Prompt rewritten ({len(prompt)} chars)")
 
         if not enhanced_bytes:
-            print(f"\n  ⚠️ Variation {i + 1} failed all attempts, skipping")
+            print(f"\n  [!] Variation {i + 1} failed all attempts, skipping")
             continue
 
         # ═══════════════════════════════════════════════════════════
         # STEP 5: Post-Production — apply realism touches
         # ═══════════════════════════════════════════════════════════
-        print(f"\n  🖌️  STEP 5: Post-Production Agent")
+        print(f"\n  [STEP 5] Post-Production Agent")
         final_path = f"{output_dir}/{job_id}_enhanced_{i + 1}.jpg"
         saved_path = await post_prod.process_and_save(enhanced_bytes, final_path)
         results.append(saved_path)
-        print(f"     ✅ Saved: {saved_path}")
+        print(f"     [+] Saved: {saved_path}")
 
     print(f"\n{'=' * 60}")
-    print(f"🎉 DONE! Generated {len(results)} enhanced images")
+    print(f"[DONE] Generated {len(results)} enhanced images")
     print(f"{'=' * 60}\n")
 
     return results

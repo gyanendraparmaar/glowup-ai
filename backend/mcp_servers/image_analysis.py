@@ -4,6 +4,7 @@ from io import BytesIO
 from PIL import Image
 import google.genai as genai
 import json
+from tenacity import retry, stop_after_attempt, wait_exponential
 from config import config
 
 
@@ -13,41 +14,61 @@ client = genai.Client(api_key=config.GEMINI_API_KEY)
 class ImageAnalysisMCP:
     """MCP-style tool server for analyzing photos using Gemini vision."""
 
+    @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
+    def _call_api(self, model: str, contents: list):
+        return client.models.generate_content(
+            model=model,
+            contents=contents,
+        )
+
     async def analyze_photo(self, image_path: str) -> dict:
         """Deep analysis of a photo: face, pose, lighting, setting, clothing, issues.
 
-        Returns a structured dict with analysis results.
+        Returns a structured dict with analysis results, including a matching
+        Awesome Nano Banana Pro style category.
         """
         img = Image.open(image_path)
 
-        response = client.models.generate_content(
+        # Fetch available styles to inject into prompt
+        from mcp_servers.style_library import StyleLibraryMCP
+        library = StyleLibraryMCP()
+        style_instructions = await library.get_style_instructions()
+
+        prompt_text = f"""Analyze this photo in detail. Return ONLY valid JSON with these fields:
+
+        {{
+            "gender": "male/female/unknown",
+            "age_range": "20s/30s/etc",
+            "pose": "standing/sitting/close-up/etc",
+            "setting": "outdoor park/indoor cafe/street/studio/etc",
+            "lighting": {{
+                "quality": "good/harsh/flat/backlit/dim",
+                "direction": "front/side/overhead/natural/mixed",
+                "color_temp": "warm/neutral/cool"
+            }},
+            "clothing": "brief description of what they're wearing",
+            "expression": "smiling/neutral/serious/laughing/etc",
+            "background": "brief description",
+            "issues": ["list of quality issues: e.g. overexposed, blurry, harsh shadows"],
+            "strengths": ["list of what's already good about the photo"],
+            "search_query": "search query to find similar professional photos on stock sites",
+            "style_category": "ID of the best matching aesthetic style from the list below"
+        }}
+
+        Be specific and accurate. The search_query should describe the type of
+        professional photo that would serve as a good lighting/composition reference.
+
+        AVAILABLE AESTHETIC STYLES TO CHOOSE FROM:
+        {style_instructions}
+
+        Choose the ONE style ID that best matches the natural vibe, setting, or potential
+        of this photo. (e.g., if it's a mirror selfie, choose '2000s_mirror_selfie'. If
+        it has strong flash, choose '1990s_camera_flash').
+        """
+
+        response = self._call_api(
             model=config.PROMPT_MODEL,
-            contents=[
-                img,
-                """Analyze this photo in detail. Return ONLY valid JSON with these fields:
-
-                {
-                    "gender": "male/female/unknown",
-                    "age_range": "20s/30s/etc",
-                    "pose": "standing/sitting/close-up/etc",
-                    "setting": "outdoor park/indoor cafe/street/studio/etc",
-                    "lighting": {
-                        "quality": "good/harsh/flat/backlit/dim",
-                        "direction": "front/side/overhead/natural/mixed",
-                        "color_temp": "warm/neutral/cool"
-                    },
-                    "clothing": "brief description of what they're wearing",
-                    "expression": "smiling/neutral/serious/laughing/etc",
-                    "background": "brief description",
-                    "issues": ["list of quality issues: e.g. overexposed, blurry, harsh shadows"],
-                    "strengths": ["list of what's already good about the photo"],
-                    "search_query": "a search query to find similar professional photos on stock sites"
-                }
-
-                Be specific and accurate. The search_query should describe the type of
-                professional photo that would serve as a good lighting/composition reference.
-                """,
-            ],
+            contents=[img, prompt_text],
         )
 
         try:
@@ -67,6 +88,7 @@ class ImageAnalysisMCP:
                 "issues": [],
                 "strengths": [],
                 "search_query": "professional portrait photography",
+                "style_category": "casual_iphone",
             }
 
     async def compare_photos(
@@ -76,7 +98,7 @@ class ImageAnalysisMCP:
         original = Image.open(original_path)
         generated = Image.open(BytesIO(generated_bytes))
 
-        response = client.models.generate_content(
+        response = self._call_api(
             model=config.QUALITY_MODEL,
             contents=[
                 generated,

@@ -5,6 +5,7 @@ from PIL import Image
 import google.genai as genai
 from mcp_servers.prompt_library import PromptLibraryMCP
 from config import config
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 
 client = genai.Client(api_key=config.GEMINI_API_KEY)
@@ -18,6 +19,13 @@ class PromptArchitectAgent:
     MCP servers used:
         - Prompt Library MCP (retrieve successful past prompts + realism rules)
     """
+
+    @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
+    def _call_api(self, contents):
+        return client.models.generate_content(
+            model=config.PROMPT_MODEL,
+            contents=contents,
+        )
 
     def __init__(self):
         self.library = PromptLibraryMCP()
@@ -48,6 +56,16 @@ class PromptArchitectAgent:
         past_prompts = await self.library.get_successful_prompts(scenario, limit=2)
         enhancement_patterns = await self.library.get_enhancement_patterns()
 
+        # Handle aesthetic style categorization
+        from mcp_servers.style_library import StyleLibraryMCP
+        style_library = StyleLibraryMCP()
+        
+        style_category = None
+        style_data = None
+        if photo_analysis and "style_category" in photo_analysis:
+            style_category = photo_analysis["style_category"]
+            style_data = await style_library.get_style_by_id(style_category)
+
         # Build the contents list for Gemini
         contents = []
 
@@ -65,6 +83,19 @@ class PromptArchitectAgent:
             except Exception:
                 continue
 
+        # Prepare style injection if available
+        style_injection = ""
+        if style_data:
+            style_injection = f"""
+            AESTHETIC STYLE GOAL: {style_data['name']}
+            {style_data['description']}
+            
+            YOU MUST seamlessly integrate the following specific aesthetic phrasing into
+            your final generated prompt (adjusting subject descriptions to match Image 1):
+            
+            "{style_data['instruction']}"
+            """
+
         # Build the analysis instruction
         if mode == "vibe" and vibe:
             task = f"""You are an expert AI prompt engineer specializing in photo-realistic
@@ -77,9 +108,11 @@ class PromptArchitectAgent:
             TASK: Write a detailed image generation prompt that creates a NEW image of the
             person from Image 1 in a "{vibe}" setting/vibe.
 
-            - PRESERVE: The person's face, skin tone, body type, and identity from Image 1
+            - PRESERVE: The person's face, skin tone, body type, and identity exactly from Image 1
             - CHANGE: Setting, lighting, and composition inspired by the reference photos
-            - The result must look like a REAL photo taken by a friend with an iPhone"""
+            - The result must look like a REAL high-end photo for a dating app.
+
+            {style_injection}"""
         else:
             task = f"""You are an expert AI prompt engineer specializing in photo-realistic
             image enhancement. You have been given:
@@ -98,7 +131,9 @@ class PromptArchitectAgent:
 
             CRITICAL: Keep the SAME clothes, SAME setting, SAME pose, SAME person.
             Just make everything look much better — like a pro photographer was there.
-            Study the reference photos for how professional lighting should look."""
+            Study the reference photos for how professional lighting should look.
+
+            {style_injection}"""
 
         # Add past successful patterns if available
         past_context = ""
@@ -109,8 +144,9 @@ class PromptArchitectAgent:
 
         # Add enhancement patterns
         patterns_text = "\n".join(f"- {p}" for p in enhancement_patterns)
-
-        contents.append(f"""{task}
+        
+        # NOTE: Fixed formatting issue where `response =` was accidentally included in the f-string in the previous implementation
+        prompt_construction = f"""{task}
 
         {past_context}
 
@@ -121,22 +157,21 @@ class PromptArchitectAgent:
 
         Write the prompt in this exact format:
 
-        SUBJECT: [describe the person — face, hair, skin tone, build, clothing from Image 1]
+        SUBJECT: [describe the person — face, hair, skin tone, build, clothing exactly from Image 1]
         SCENE: [describe the setting to recreate/create]
-        LIGHTING: [specific lighting direction, quality, color temperature — inspired by references]
-        CAMERA: [iPhone 15 Pro Max, f/1.78, natural depth-of-field]
+        LIGHTING: [specific lighting direction, quality, color temperature — incorporate style injection here if relevant]
+        CAMERA: [specific lens, camera body, depth-of-field — incorporate style injection here if relevant]
         EXPRESSION: [specific expression direction]
         DETAILS: [specific details to include for maximum realism]
         AVOID: [things that would make it look AI-generated]
 
         Be EXTREMELY specific. Every detail matters for realism.
-        The output must be indistinguishable from a real iPhone photo.
-        """)
-
-        response = client.models.generate_content(
-            model=config.PROMPT_MODEL,
-            contents=contents,
-        )
+        Make absolutely sure the SUBJECT description matches the uploaded photo exactly!
+        """
+        
+        contents.append(prompt_construction)
+        
+        response = self._call_api(contents)
 
         return response.text
 
@@ -165,25 +200,22 @@ class PromptArchitectAgent:
         realism_rules = await self.library.get_realism_rules()
         vibe_instruction = f"The desired vibe is: {vibe}" if vibe else "Enhance the existing scene."
 
-        response = client.models.generate_content(
-            model=config.PROMPT_MODEL,
-            contents=[
-                photo,
-                f"""The previous enhancement prompt produced an image with these issues:
-                {issues_text}
+        response = self._call_api([
+            photo,
+            f"""The previous enhancement prompt produced an image with these issues:
+            {issues_text}
 
-                Original prompt was:
-                {original_prompt}
+            Original prompt was:
+            {original_prompt}
 
-                Rewrite the prompt to specifically FIX these issues.
-                Add EXPLICIT instructions to avoid each listed problem.
-                Keep everything else the same — only fix the problems.
+            Rewrite the prompt to specifically FIX these issues.
+            Add EXPLICIT instructions to avoid each listed problem.
+            Keep everything else the same — only fix the problems.
 
-                {vibe_instruction}
+            {vibe_instruction}
 
-                {realism_rules}
-                """,
-            ],
-        )
+            {realism_rules}
+            """,
+        ])
 
         return response.text

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from PIL import Image
 import google.genai as genai
+from tenacity import retry, stop_after_attempt, wait_exponential
 from config import config
 
 
@@ -16,6 +17,17 @@ class ImageEnhancerAgent:
     This is a focused agent — it just executes the generation.
     The intelligence is in the Prompt Architect.
     """
+
+    @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
+    def _call_api(self, contents, temperature):
+        return client.models.generate_content(
+            model=config.IMAGE_MODEL,
+            contents=contents,
+            config=genai.types.GenerateContentConfig(
+                response_modalities=["IMAGE"],
+                temperature=temperature,
+            ),
+        )
 
     async def enhance(
         self,
@@ -54,14 +66,7 @@ class ImageEnhancerAgent:
         contents.append(prompt)
 
         try:
-            response = client.models.generate_content(
-                model=config.IMAGE_MODEL,
-                contents=contents,
-                config=genai.types.GenerateContentConfig(
-                    response_modalities=["IMAGE"],
-                    temperature=temperature,
-                ),
-            )
+            response = self._call_api(contents, temperature)
 
             # Extract the image from the response
             if response.candidates:
