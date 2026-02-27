@@ -18,7 +18,7 @@ class Config:
     QUALITY_THRESHOLD: int = int(os.getenv("QUALITY_THRESHOLD", "7"))
     AI_DETECTION_MAX: int = int(os.getenv("AI_DETECTION_MAX", "3"))
     MAX_RETRIES: int = int(os.getenv("MAX_RETRIES", "3"))
-    NUM_VARIATIONS: int = int(os.getenv("NUM_VARIATIONS", "4"))
+    NUM_VARIATIONS: int = int(os.getenv("NUM_VARIATIONS", "1"))
     NUM_SCOUT_REFS: int = int(os.getenv("NUM_SCOUT_REFS", "3"))
 
     # Paths
