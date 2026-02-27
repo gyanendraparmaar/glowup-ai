@@ -7,8 +7,14 @@ load_dotenv(override=True)
 
 
 class Config:
-    # AI
-    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    raw_keys = os.getenv("GEMINI_API_KEYS", os.getenv("GEMINI_API_KEY", ""))
+    GEMINI_API_KEYS: list[str] = [k.strip() for k in raw_keys.split(",") if k.strip()]
+    
+    @property
+    def GEMINI_API_KEY(self) -> str:
+        """Returns a random Gemini API key for basic load balancing to avoid limits."""
+        import random
+        return random.choice(self.GEMINI_API_KEYS) if self.GEMINI_API_KEYS else ""
 
     # Photo Scout APIs
     UNSPLASH_API_KEY: str = os.getenv("UNSPLASH_API_KEY", "")

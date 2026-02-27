@@ -8,14 +8,12 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from config import config
 
 
-client = genai.Client(api_key=config.GEMINI_API_KEY)
-
-
 class ImageAnalysisMCP:
     """MCP-style tool server for analyzing photos using Gemini vision."""
 
     @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
     def _call_api(self, model: str, contents: list):
+        client = genai.Client(api_key=config.GEMINI_API_KEY)
         return client.models.generate_content(
             model=model,
             contents=contents,

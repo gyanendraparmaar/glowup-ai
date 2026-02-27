@@ -8,9 +8,6 @@ from config import config
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 
-client = genai.Client(api_key=config.GEMINI_API_KEY)
-
-
 class PromptArchitectAgent:
     """Agent that takes the user's photo, scouted references, and optional
     vibe selection, then writes a highly detailed enhancement prompt for
@@ -22,6 +19,7 @@ class PromptArchitectAgent:
 
     @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
     def _call_api(self, contents):
+        client = genai.Client(api_key=config.GEMINI_API_KEY)
         return client.models.generate_content(
             model=config.PROMPT_MODEL,
             contents=contents,
