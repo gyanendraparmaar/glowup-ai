@@ -32,10 +32,14 @@ class Config:
     PROMPT_LIBRARY_PATH: str = os.getenv("PROMPT_LIBRARY_PATH", "prompt_library.json")
 
 
-    # Models
+    # Models for Generation
     PROMPT_MODEL: str = "gemini-2.0-flash"
-    IMAGE_MODEL: str = "gemini-2.0-flash-preview-image-generation"
+    IMAGE_MODEL: str = "nano-banana-pro-preview"
     QUALITY_MODEL: str = "gemini-2.0-flash"
-
+    
+    # Groq Models
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
+    GROQ_TEXT_MODEL: str = "llama-3.3-70b-versatile"
+    GROQ_VISION_MODEL: str = "meta-llama/llama-4-scout-17b-16e-instruct"
 
 config = Config()

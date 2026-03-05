@@ -8,7 +8,7 @@ interface PhotoUploaderProps {
     disabled?: boolean;
 }
 
-const MAX_PHOTOS = 5;
+const MAX_PHOTOS = 6;
 
 export default function PhotoUploader({
     onFilesSelected,

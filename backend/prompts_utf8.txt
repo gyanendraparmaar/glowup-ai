@@ -1,0 +1,108 @@
+﻿
+================================================================================
+[IMAGE] user_test_original.jpg
+================================================================================
+Here is the detailed image enhancement prompt:
+
+**SUBJECT:** 
+Two young men are standing in the foreground, posing for the camera. The man on the left has short, dark hair and is wearing a green sweater with white polka dots, a silver necklace, and a white watch on his right wrist. He has his right hand under his chin, with his elbow slightly bent. His gaze is directed straight ahead. The man on the right has short, dark hair and is wearing a white t-shirt, a black watch on his left wrist, and a purple hoodie around his shoulders. He has his left hand raised to his mouth, with his index finger touching his lips. His gaze is also directed straight ahead. Behind them, there are several people in the crowd, including a person with short, dark hair wearing a white t-shirt and another person with dark hair wearing a black top.
+
+**SCENE:** 
+The background is a nighttime outdoor concert or festival setting. There is a large stage with a pyramid-shaped roof and a metal scaffolding structure. The stage is equipped with multiple lights and speakers. The sky above is dark, and there are some trees visible in the distance. The atmosphere appears lively, with a crowd of people gathered around the stage.
+
+**LIGHTING:** 
+The lighting is warm and cinematic, with a golden tone. The light source appears to be coming from the stage lights, which are casting a warm glow on the subjects' faces. The lighting is soft and natural, with subtle shadows on the subjects' skin.
+
+**CAMERA:** 
+The image should be shot on an iPhone 15 Pro Max with an f/1.78 aperture, capturing a natural depth-of-field bokeh. The camera is positioned at a slight angle, with a subtle lens distortion at the edges.
+
+**EXPRESSION:** 
+The expression of both men should be confident and relaxed, with a slight asymmetry in their facial features. Their gaze direction should be straight ahead, with a subtle hint of a smile.
+
+**DETAILS:** 
+To achieve maximum realism, the image should include the following details:
+- Natural skin texture with visible pores and slight imperfections
+- Realistic hair with individual strands visible
+- Clothing with real fabric texture and natural wrinkles/folds
+- Subtle environmental reflections in the eyes
+- Micro-details such as tiny fabric creases, slight color variations in skin, and natural shadow gradients
+
+**AVOID:** 
+Please avoid any AI-generated or unnatural elements, such as airbrushed skin, perfect symmetry, or unnaturally smooth textures. Also, remove any UI elements, hearts, status bars, and text overlays if the original image was a screenshot. The image should look like a real phone photo taken with an iPhone 15 Pro Max.
+
+================================================================================
+[IMAGE] 0051539e_original.jpg
+================================================================================
+Here is the detailed image enhancement prompt:
+
+**SUBJECT:** 
+The primary subject, a young man with dark hair and glasses, is wearing a green sweater with white polka dots and a silver necklace. He has a slender build and is standing with his right hand resting on his chin, with his elbow slightly bent. His gaze is directed straight ahead, with a subtle, relaxed expression. To his right is another young man with dark hair and glasses, wearing a white t-shirt and a black watch on his left wrist. He has a similar slender build and is standing with his left hand raised to his mouth, with his fingers curled inward. His gaze is also directed straight ahead, with a hint of a smile. Behind them, there are several other people in the crowd, including a person wearing a purple shirt and another with a white shirt. The clothing and poses of all individuals must be preserved exactly.
+
+**SCENE:** 
+The scene is set at an outdoor concert or festival, with a large stage and sound equipment in the background. The stage has a pyramid-shaped roof and is surrounded by scaffolding and lighting rigs. The background is dark, with some trees visible on the left side. The atmosphere is lively, with a crowd of people milling about. The exact setting and background elements must be preserved.
+
+**LIGHTING:** 
+The lighting is warm and cinematic, with a golden tone that enhances the natural colors of the scene. The light source appears to be a combination of stage lights and ambient outdoor illumination. The lighting is soft and natural, with subtle shadows and depth. The color temperature is slightly warm, with a hint of golden tones.
+
+**CAMERA:** 
+The camera is an iPhone 15 Pro Max with an f/1.78 aperture, capturing a natural depth-of-field bokeh effect. The lens has a slight distortion at the edges, adding to the realism of the image.
+
+**EXPRESSION:** 
+The expression of the primary subject is relaxed and confident, with a subtle smile. His gaze is directed straight ahead, with a sense of calmness. The second subject also has a relaxed expression, with a hint of a smile. Their facial geometry and expressions must be preserved exactly.
+
+**DETAILS:** 
+To achieve maximum realism, the image should include:
+* Natural skin texture with visible pores and slight imperfections
+* Realistic hair with individual strands visible
+* Clothing with real fabric texture and natural wrinkles/folds
+* Subtle environmental reflections in the eyes
+* Micro-details such as tiny fabric creases, slight color variations in skin, and natural shadow gradients
+
+**AVOID:** 
+To avoid an AI-generated look, the image should not have:
+* Airbrushed or plastic-looking skin
+* Perfect symmetry in face or body
+* Unnaturally smooth textures on any surface
+* UI elements, hearts, status bars, or text overlays (if the original was a screenshot)
+
+The goal is to create a highly realistic and attractive image that preserves the exact scene, poses, and expressions of the original photo, while upgrading the photographic quality and aesthetic.
+
+================================================================================
+[IMAGE] 261c8c68_original.jpg
+================================================================================
+Here is the detailed image enhancement prompt:
+
+**SUBJECT:** 
+The primary subject is a young man with short, dark hair, wearing a green sweater, khaki cargo pants, and white sneakers with yellow accents. He has a silver necklace with a small pendant and a black watch on his left wrist. His hands are in his pockets, with his left hand slightly deeper in his pocket than his right. He is standing with his feet shoulder-width apart, looking to his right with a slight smile. His facial features include a slight asymmetry, with a small nose and visible pores on his skin. 
+
+In the background, there are several people walking around, including a man in a white shirt and black pants riding a scooter to the right. Others are dressed in casual clothing, such as jeans and t-shirts. A woman in a pink outfit and a child are also visible among the crowd.
+
+**SCENE:** 
+The scene is set in front of the Chhatrapati Shivaji Maharaj Terminus (CSMT) railway station in Mumbai, India. The building is a large, ornate structure with a mix of Gothic and Victorian architectural styles. The main clock tower is prominent, with a large clock face visible. The building's facade is made of yellowish-brown stone, with many arches, columns, and intricate carvings. There are trees and greenery in front of the building, including palm trees. The street is paved and has a few scattered leaves and debris.
+
+**LIGHTING:** 
+The lighting is warm and golden, with a slight bias towards yellow tones. The sun appears to be setting, casting a gentle glow on the scene. The light is soft and natural, with subtle shadows on the subject's face and clothing. The lighting direction is from the right side of the image, creating a gentle shadow on the left side of the subject's face.
+
+**CAMERA:** 
+The image is shot on an iPhone 15 Pro Max with an f/1.78 aperture, creating a natural depth-of-field bokeh. The camera is positioned at a slight angle, with a subtle lens distortion at the edges.
+
+**EXPRESSION:** 
+The primary subject has a relaxed and confident expression, with a slight smile. His gaze is directed to his right, with a subtle tilt of his head. The expression is asymmetric, with a slight raise of his left eyebrow.
+
+**DETAILS:** 
+To ensure maximum realism, the image should include the following details:
+- Natural skin texture with visible pores and slight imperfections
+- Individual strands of hair visible, not a smooth mass
+- Realistic fabric texture and wrinkles on clothing
+- Subtle environmental reflections in the subject's eyes
+- Micro-details such as tiny fabric creases, slight color variations in skin, and natural shadow gradients
+- A slight warmth to the color grading, with a bias towards golden tones
+
+**AVOID:** 
+To avoid an AI-generated look, the image should not have:
+- Airbrushed or plastic-looking skin
+- Perfect symmetry in face or body
+- Unnaturally smooth textures on any surface
+- UI elements, hearts, status bars, or text overlays (if the original was a screenshot)
+
+The goal is to create a highly realistic and attractive image that preserves the exact scene, pose, and facial geometry of the original photo, while upgrading the photographic quality and aesthetic.

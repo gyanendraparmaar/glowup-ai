@@ -1,0 +1,29 @@
+﻿python : C:\Users\Gyanendra Parmaar\AppData\Roamin
+g\Python\Python39\site-packages\google\auth\__init
+__.py:54: FutureWarning: You are using a Python 
+version 3.9 past its end of life. Google will 
+update google-auth with critical bug fixes on a 
+best-effort basis, but not with any other fixes 
+or features. Please upgrade your Python version, 
+and then update google-auth.
+At line:1 char:1
++ python test_pipeline.py > test_out_full.txt 
+2>&1 ; type test_out_full ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\U 
+   sers\Gyanen...te google-auth.:String) [], Rem  
+  oteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(eol_message.format("3.9"), 
+FutureWarning)
+C:\Users\Gyanendra Parmaar\AppData\Roaming\Python\
+Python39\site-packages\google\oauth2\__init__.py:4
+0: FutureWarning: You are using a Python version 
+3.9 past its end of life. Google will update 
+google-auth with critical bug fixes on a 
+best-effort basis, but not with any other fixes 
+or features. Please upgrade your Python version, 
+and then update google-auth.
+  warnings.warn(eol_message.format("3.9"), 
+FutureWarning)

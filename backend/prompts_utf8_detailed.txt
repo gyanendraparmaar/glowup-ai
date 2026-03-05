@@ -1,0 +1,32 @@
+﻿
+================================================================================
+[IMAGE] user_test_original.jpg
+================================================================================
+Two young men standing side by side at an outdoor music festival at night, the man on the left wearing a green sweater with white dots and a silver necklace, the man on the right wearing a white t-shirt and a black watch, both with short dark hair and glasses, posing with their hands near their faces; exact facial geometry and identity preserved, with natural skin texture, visible pores, and slight asymmetry in expression; exact clothing, including sweater texture, t-shirt fabric wrinkles, and watch details; exact pose and gaze, with the man on the left's hand resting on his chin and the man on the right's hand near his mouth, both looking directly at the camera; background featuring a large stage with bright lights, a crowd of people, and a dark sky; warm, cinematic lighting with golden tones, natural depth-of-field bokeh, and subtle environmental reflections in eyes; shot on iPhone 15 Pro Max, f/1.78, highly detailed, 8k resolution; natural eye reflections matching environment lighting, realistic hair with individual strands visible, clothing with real fabric texture and natural wrinkles, background with realistic depth-of-field blur; subtle warm color grading, slightly shifted toward golden tones; absolutely no airbrushed skin, no perfect symmetry in face or body, no unnaturally smooth textures; include micro-details such as tiny fabric creases, slight color variations in skin, natural shadow gradients; --no UI elements, text, hearts, battery icons, --no symmetry, --no airbrushed skin.
+
+================================================================================
+[IMAGE] 0051539e_original.jpg
+================================================================================
+Two young men standing side by side at an outdoor music festival, the man on the left with short black hair, wearing a green sweater with white polka dots, a silver necklace, and a white wristband on his right wrist, his right hand resting on his chin; the man on the right with short black hair, wearing a white t-shirt, a black watch on his left wrist, and making a gesture with his right hand near his face; both men have brown skin and dark eyes, with the man on the left wearing glasses and the man on the right wearing glasses with a slight purple tint; their facial features, including nose shape, lip shape, and facial structure, must be preserved exactly; they are surrounded by a crowd of people, with some having short black hair and others partially obscured; the man on the left's companion's arm is visible on the left side; the background features a large stage with scaffolding, lights, and a pyramid-shaped roof, set against a dark night sky; the scene is illuminated by warm, natural golden tones, with a slight warmth and cinematic contrast; the lighting setup includes soft, natural light with subtle environmental reflections in their eyes; the image should have a natural depth-of-field bokeh, with a slight blur in the background; the camera settings are emulated from an iPhone 15 Pro Max, f/1.78 aperture, with a natural lens distortion at the edges; the image should have a realistic, photo-realistic quality, with natural skin texture, visible pores, and slight imperfections; the clothing should have real fabric texture and natural wrinkles/folds; the background should have a realistic depth-of-field blur; the color grading is slightly warm, with a subtle golden tone; --no UI elements, text, hearts, battery icons, airbrushed skin, symmetry; --no smooth, plastic, or waxy textures on any surface; --no perfect symmetry in face or body.
+
+================================================================================
+[IMAGE] 261c8c68_original.jpg
+================================================================================
+A man in his mid-twenties, wearing a dark green sweater, khaki cargo pants, and white sneakers with yellow accents, standing confidently in the center of a bustling square, hands in pockets, gazing to the left with a subtle, asymmetrical smile; his facial features, including nose, eyes, eyebrows, and jawline, preserved exactly as in the original; dark hair styled neatly, slightly tousled; exact same pose with hands in pockets and gaze direction maintained; 
+wearing a silver necklace with a small pendant and a black watch on his left wrist; 
+surrounded by numerous people walking around, some in the background, including a person on a scooter to the right, and a crowd of onlookers; 
+in the background, the iconic Chhatrapati Shivaji Maharaj Terminus building in Mumbai, India, with its distinctive Victorian-era Gothic Revival architecture, clock tower, and large dome; 
+warm, golden hour lighting with soft, natural shadows, subtle environmental reflections in his eyes; 
+shot on iPhone 15 Pro Max, f/1.78, natural depth-of-field bokeh, slight lens distortion at edges; 
+natural skin texture with visible pores, slight asymmetry in expression; 
+warm color grading, not perfectly neutral ù slightly shifted toward golden tones; 
+realistic hair with individual strands visible; 
+clothing with real fabric texture and natural wrinkles/folds; 
+background with realistic depth-of-field blur; 
+subtle warm color grading; 
+absolutely no airbrushed/plastic/waxy skin; 
+no perfect symmetry in face or body; 
+no unnaturally smooth textures on any surface; 
+including micro-details: tiny fabric creases, slight color variations in skin, natural shadow gradients; 
+--no UI elements, text, hearts, battery icons; 
+--no alterations to clothing, background, or identity.

@@ -1,0 +1,23 @@
+Here is the detailed image generation prompt:
+
+**SUBJECT**: The person from Image 1, a male with a slender build, wearing a white and blue T-shirt with khaki pants and black sneakers. His hair is dark brown, slightly messy, and cut short. His skin tone is medium brown with a slight warm undertone. Facial features include a rounded face, dark brown eyes, and a small nose. He has a short beard and mustache.
+
+**SCENE**: A modern, minimalist office background with a large window on the left side, allowing natural light to pour in. The wall behind him is a light gray color, and there's a small potted plant on the windowsill.
+
+**LIGHTING**: Soft, natural light coming from the window on the left side, with a warm color temperature (around 5600K). The light is diffused, with a slight gradient across his face, accentuating his facial features.
+
+**CAMERA**: Shot on iPhone 15 Pro Max, f/1.78 aperture, with a slight lens distortion at the edges. The depth-of-field is natural, with a subtle bokeh effect in the background.
+
+**EXPRESSION**: A friendly, approachable expression with a slight smile, showcasing his teeth. His eyes are relaxed, with a hint of warmth.
+
+**DETAILS**: Include the following details for maximum realism:
+- Visible pores and slight imperfections on his skin
+- Individual strands of hair visible, with a slight texture to his beard and mustache
+- Natural fabric texture and wrinkles on his clothing
+- Subtle environmental reflections in his eyes
+- Tiny fabric creases on his shirt and pants
+- Slight color variations in his skin tone
+
+**AVOID**: Absolutely avoid any airbrushed, plastic, or waxy skin texture. Ensure that his face and body are not perfectly symmetric. Avoid unnaturally smooth textures on any surface, including clothing and skin.
+
+This prompt should yield a highly realistic, professional headshot that preserves the person's identity while incorporating the desired setting, lighting, and composition.

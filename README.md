@@ -1,32 +1,27 @@
-# 🔥 GlowUp AI — AI Photo Enhancement Demo
+# 💘 Hinge Assistant — AI Profile Analyst
 
-> Upload a photo → 5 AI agents enhance it → Download stunning results
+> Upload your Hinge screenshots → 2 AI Agents analyze the profile → Get actionable, brutal feedback & better prompts.
+
+## The Pivot
+Previously "GlowUp AI" (an AI photo generation tool), this project has successfully **pivoted** to a **Dating Profile Analysis Assistant**. Instead of generating deepfakes, we now extract real data from user screenshots using Vision Models to provide elite dating coach advice, tailored prompts, and direct feedback on how to improve the current profile.
 
 ## Architecture
 
 ```
-📸 Photo Scout ──→ ✍️ Prompt Architect ──→ 🎨 Image Enhancer
-     │                    │                       │
-     │ (searches web      │ (writes the           │ (Nano Banana Pro
-     │  for similar       │  perfect prompt       │  generates the
-     │  pro photos)       │  using all inputs)    │  enhanced image)
-     │                    │                       │
-     ▼                    ▼                       ▼
- Web Search MCP     Prompt Library MCP     🔍 Quality Inspector
-                                                  │
-                                           (PASS? → 🖌️ Post-Production)
-                                           (FAIL? → retry with fixed prompt)
+📸 Screenshot Scout ──→ 🧠 Profile Reviewer ──→ 📊 Frontend Dashboard
+     │                        │                       │
+     │ (Uses Gemini Vision    │ (Acts as an Elite     │ (Displays formatted
+     │  to extract text,      │  Dating Coach to      │  review, photo feedback
+     │  prompts, and photo    │  critique and score)  │  and prompt suggestions)
+     │  descriptions)         │                       │
+     ▼                        ▼                       ▼
+  Gemini 2.5 Flash         Gemini 2.5 Flash        Next.js + Tailwind
 ```
 
 ## Quick Start
 
 ### 1. Get API Keys
-
-| Service | URL | Time |
-|---|---|---|
-| **Gemini API** | [aistudio.google.com](https://aistudio.google.com) | 2 min |
-| **Unsplash API** | [unsplash.com/developers](https://unsplash.com/developers) | 5 min |
-| **Pexels API** | [pexels.com/api](https://www.pexels.com/api/) | 5 min |
+You will need a [Gemini API Key](https://aistudio.google.com/app/apikey). You can provide a comma-separated list of keys to evade rate-limiting.
 
 ### 2. Setup
 
@@ -39,11 +34,12 @@ venv\Scripts\activate          # Windows
 pip install -r requirements.txt
 
 # Create your .env file
-copy ..\.env.example ..\.env
-# Then edit ..\.env and paste your API keys
+# GEMINI_API_KEYS=key1,key2,key3
+```
 
+```bash
 # Frontend
-cd ../frontend
+cd frontend
 npm install
 ```
 
@@ -52,7 +48,7 @@ npm install
 ```bash
 # Terminal 1: Backend
 cd backend
-python main.py
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
 # → http://localhost:8000/docs
 
 # Terminal 2: Frontend
@@ -61,69 +57,15 @@ npm run dev
 # → http://localhost:3000
 ```
 
-### 4. Test with curl
-
-```bash
-# Enhance a photo (2 variations)
-curl -X POST http://localhost:8000/api/enhance \
-  -F "file=@your_photo.jpg" \
-  -F "num_variations=2"
-
-# Enhance with a vibe
-curl -X POST http://localhost:8000/api/enhance \
-  -F "file=@your_photo.jpg" \
-  -F "vibe=coffee_shop" \
-  -F "num_variations=2"
-```
-
-## Project Structure
-
-```
-backend/
-├── main.py                 # FastAPI server
-├── pipeline.py             # Orchestrator (runs all 5 agents)
-├── config.py               # Config + .env loader
-├── agents/
-│   ├── photo_scout.py      # 📸 Finds reference photos from web
-│   ├── prompt_architect.py # ✍️ Writes optimal enhancement prompts
-│   ├── image_enhancer.py   # 🎨 Generates images via Nano Banana Pro
-│   ├── quality_inspector.py# 🔍 Evaluates quality with separate model
-│   └── post_production.py  # 🖌️ Applies realism post-processing
-├── mcp_servers/
-│   ├── web_search.py       # Unsplash + Pexels APIs
-│   ├── image_analysis.py   # Gemini vision analysis
-│   ├── prompt_library.py   # Local JSON prompt store
-│   └── storage.py          # Local filesystem storage
-├── outputs/                # Generated images saved here
-└── requirements.txt
-
-frontend/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx        # Main page: upload → enhance → download
-│   │   ├── layout.tsx      # Root layout with metadata
-│   │   └── globals.css     # Design system + animations
-│   └── components/
-│       ├── PhotoUploader.tsx    # Drag & drop upload
-│       ├── VibeSelector.tsx     # Optional vibe picker
-│       ├── ProgressDisplay.tsx  # Pipeline stage animation
-│       └── ResultGallery.tsx    # Results + download buttons
-├── next.config.ts          # API proxy to backend
-└── package.json
-```
-
 ## How It Works
 
-1. **Photo Scout** analyzes your photo (face, pose, setting, lighting) using Gemini, then searches Unsplash/Pexels for similar professional photos
-2. **Prompt Architect** studies your photo + the scouted references + past successful prompts, then writes a highly specific enhancement prompt
-3. **Image Enhancer** sends everything to Nano Banana Pro to generate the enhanced image
-4. **Quality Inspector** evaluates the result using a SEPARATE Gemini model (catches artifacts the generator misses)
-   - If FAIL → sends issues back to Prompt Architect for prompt rewriting → retry
-   - If PASS → continues to Post-Production
-5. **Post-Production** applies realism layers: vignette, sensor noise, color shift, JPEG compression, iPhone EXIF data
+1. **Screenshot Scout** analyzes the uploaded screenshots using Gemini 2.5 Flash Vision. It parses out the bio, user properties, the exact Hinge prompts, and detailed descriptions of what the photos look like.
+2. **Profile Reviewer** takes the parsed data and acts as an elite dating coach for 2024/2025. It evaluates the structure of the profile, writes custom openers, and crafts improved answers to top-tier Hinge prompts based on the user's vibe.
+3. **Frontend Dashboard** dynamically renders the JSON analysis returned by the backend into a beautiful UI, outlining photo-by-photo scores and specific prompt rewrites.
 
 ## Status
 
-- [x] Backend: All agents + MCP servers + pipeline
+- [x] Backend: ScreenshotScout + ProfileReviewer Agents
 - [x] Frontend: Next.js + Tailwind CSS UI
-- [ ] End-to-end testing with live API keys
+- [x] Rate Limit Handling (Multi-API key rotation, payload compression)
+- [x] End-to-end testing with Gemini Flash

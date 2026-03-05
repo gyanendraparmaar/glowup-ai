@@ -1,0 +1,71 @@
+﻿
+================================================================================
+[IMAGE] user_test_original.jpg
+================================================================================
+SUBJECT: Two young men standing side by side, both with dark hair and glasses. The man on the left has a green sweater with white dots, a silver necklace, and a white watch on his right wrist. He is wearing a serious expression, looking directly at the camera with his right hand resting on his chin. The man on the right has a white t-shirt, a black watch on his left wrist, and a purple hoodie around his shoulders. He is making a gesture with his right hand near his mouth and has his left arm around the other man's shoulder. The man on the right is also looking at the camera. Behind them, several other people are visible, including a person with short dark hair and a white t-shirt on the left side.
+
+SCENE: The background features a large stage with a triangular roof and scaffolding, illuminated by bright white lights. The stage appears to be set up for a concert or performance. The sky above is dark, indicating that the photo was taken at night. The atmosphere suggests an outdoor music festival or event.
+
+LIGHTING: Warm, golden tones with cinematic contrast, natural lighting direction from the left side, slight shadows on the faces and bodies.
+
+CAMERA: Shot on iPhone 15 Pro Max, f/1.78 aperture, natural depth-of-field bokeh, slight lens distortion at edges.
+
+EXPRESSION: Confident and relaxed, with a serious gaze direction, emphasizing the natural facial geometry and expression.
+
+DETAILS: Include natural skin texture with visible pores, slight asymmetry in expression, subtle environmental reflections in eyes, realistic hair with individual strands visible, clothing with real fabric texture and natural wrinkles/folds, background with realistic depth-of-field blur (bokeh), and subtle warm color grading.
+
+AVOID: Perfect symmetry, airbrushed skin, smooth textures on any surface, UI elements, hearts, status bars, and text overlays. 
+
+Since the image does not appear to have any UI elements or text overlays, there is no need to explicitly instruct to remove them. 
+
+Here is the final prompt:
+
+SUBJECT: Two young men standing side by side, both with dark hair and glasses. The man on the left has a green sweater with white dots, a silver necklace, and a white watch on his right wrist. He is wearing a serious expression, looking directly at the camera with his right hand resting on his chin. The man on the right has a white t-shirt, a black watch on his left wrist, and a purple hoodie around his shoulders. He is making a gesture with his right hand near his mouth and has his left arm around the other man's shoulder. The man on the right is also looking at the camera. Behind them, several other people are visible, including a person with short dark hair and a white t-shirt on the left side.
+
+SCENE: A large stage with a triangular roof and scaffolding, illuminated by bright white lights, dark sky, outdoor music festival or event.
+
+LIGHTING: Warm, golden tones, cinematic contrast, natural lighting direction from the left side.
+
+CAMERA: Shot on iPhone 15 Pro Max, f/1.78 aperture, natural depth-of-field bokeh.
+
+EXPRESSION: Confident, relaxed, serious gaze direction.
+
+DETAILS: Natural skin texture, visible pores, slight asymmetry in expression, subtle environmental reflections in eyes, realistic hair, clothing with real fabric texture, natural wrinkles/folds.
+
+AVOID: Perfect symmetry, airbrushed skin, smooth textures, UI elements.
+
+================================================================================
+[IMAGE] 0051539e_original.jpg
+================================================================================
+SUBJECT: Two young men standing side by side, both with dark hair and glasses. The man on the left has a green sweater with white dots, a silver necklace, and a watch on his right wrist. He is wearing a green sweater with white dots, and his right hand is raised to his chin. The man on the right has a white t-shirt, a black watch on his left wrist, and is making a gesture with his right hand near his mouth. The man on the left has short, dark hair, and his facial features include a nose, mouth, and eyes that are directed straight ahead. The man on the right has short, dark hair, and his facial features include a nose, mouth, and eyes that are directed straight ahead. Behind them, several other people are visible, including a person wearing a white shirt and a person with short dark hair.
+
+SCENE: A nighttime outdoor concert or festival setting, with a large stage and a crowd of people in the background. The stage has a large sound system and lighting equipment, and there are several tall poles with lights on them. The sky is dark, and there are some trees visible in the distance.
+
+LIGHTING: Warm, golden, cinematic lighting with a slight glow on the subjects' faces. The light source appears to be coming from the stage and the lighting equipment, with some soft shadows on the subjects' faces and bodies. The overall color temperature is slightly warm, with a golden tone.
+
+CAMERA: Shot on iPhone 15 Pro Max, f/1.78, natural depth-of-field bokeh. The camera is positioned at a slight angle, with the lens distortion visible at the edges of the frame.
+
+EXPRESSION: Confident, relaxed, and attractive, with a slight smile on both subjects' faces. The man on the left has his right hand raised to his chin, and the man on the right has his right hand near his mouth. Their gaze direction is straight ahead.
+
+DETAILS: Include natural skin texture with visible pores, slight asymmetry in expression, and subtle environmental reflections in the eyes. The clothing should have real fabric texture and natural wrinkles/folds. The background should have realistic depth-of-field blur (bokeh).
+
+AVOID: Perfect symmetry, airbrushed skin, smooth textures on any surface, and UI elements. Remove all UI/interface elements, hearts, status bars, and text overlays, as the original image appears to be a clean photograph. Suppress any overly processed or unnatural look, and ensure the image looks like a real phone photo.
+
+================================================================================
+[IMAGE] 261c8c68_original.jpg
+================================================================================
+SUBJECT: The primary subject is a young man with short, dark hair, standing in the center of the image. He wears a green sweater, khaki cargo pants, and white sneakers with yellow accents. His hands are in his pockets, and he gazes to the left. He has a silver necklace and a watch on his left wrist. His facial features include a slight asymmetry, with a small nose, and a defined jawline. 
+
+The secondary subjects in the background include a crowd of people walking around, some on foot and others on scooters. One person on a scooter wears a white shirt and black pants. The crowd consists of men and women in casual clothing, such as t-shirts, jeans, and traditional Indian attire.
+
+SCENE: The scene is set in a large, open square in front of a historic, ornate building with a mix of Gothic and Indian architectural styles. The building features a large clock tower, domes, and intricate carvings. The square is paved with dark gray asphalt and has a few trees and greenery. The background is a clear blue sky. The atmosphere appears to be lively, with people walking around and socializing.
+
+LIGHTING: The lighting is warm and golden, with a slight bias towards a cinematic style. The sun appears to be setting, casting a gentle glow on the scene. The light source is from the right side of the image, creating a subtle shadow on the left side of the subject's face. The lighting is soft and natural, with a slight warmth to it.
+
+CAMERA: The image is shot on an iPhone 15 Pro Max with an f/1.78 aperture, creating a natural depth-of-field bokeh. The camera is positioned at a slight angle, with a subtle lens distortion at the edges.
+
+EXPRESSION: The primary subject has a confident and relaxed expression, with a slight smile. His gaze is directed to the left, and his eyebrows are slightly raised. The expression is asymmetrical, with a slight raise on one side of his mouth.
+
+DETAILS: The image should include micro-details such as the subject's natural skin texture with visible pores, slight imperfections, and natural skin variation. The fabric of his clothing should have real texture and natural wrinkles/folds. The background should have a realistic depth-of-field blur (bokeh), and the environmental reflections in the subject's eyes should be subtle.
+
+AVOID: Perfect symmetry in the face or body, airbrushed or plastic-looking skin, unnaturally smooth textures on any surface, and UI elements such as hearts, status bars, and text overlays. The image should have a natural, photo-realistic look, with no obvious AI-generated artifacts. Remove all screenshot interface elements.

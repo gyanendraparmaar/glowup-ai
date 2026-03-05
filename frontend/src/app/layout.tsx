@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "GlowUp AI — AI Photo Enhancement",
+  title: "Hinge Assistant — AI Profile Analyst",
   description:
-    "Upload your photos and let 5 AI agents enhance them to look stunningly realistic. Powered by Nano Banana Pro.",
+    "Upload screenshots of your Hinge profile and let two AI agents analyze, roast, and improve your dating profile with top-tier prompts and better photo selection.",
 };
 
 export default function RootLayout({

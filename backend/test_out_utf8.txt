@@ -1,0 +1,42 @@
+python : C:\Users\Gyanendra Parmaar\AppData\Roamin
+g\Python\Python39\site-packages\google\auth\__init
+__.py:54: FutureWarning: You are using a Python 
+version 3.9 past its end of life. Google will 
+update google-auth with critical bug fixes on a 
+best-effort basis, but not with any other fixes 
+or features. Please upgrade your Python version, 
+and then update google-auth.
+At line:1 char:1
++ python test_pipeline.py > test_out.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: 
+(C:\Us    ers\Gyanen...te google-auth.:String) 
+[], Remot    eException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(eol_message.format("3.9"), 
+FutureWarning)
+C:\Users\Gyanendra Parmaar\AppData\Roaming\Python\
+Python39\site-packages\google\oauth2\__init__.py:4
+0: FutureWarning: You are using a Python version 
+3.9 past its end of life. Google will update 
+google-auth with critical bug fixes on a 
+best-effort basis, but not with any other fixes 
+or features. Please upgrade your Python version, 
+and then update google-auth.
+  warnings.warn(eol_message.format("3.9"), 
+FutureWarning)
+Downloading and generating mock Hinge screenshots...
+Γ£à Created: test_images/screenshot_1.jpg
+Γ£à Created: test_images/screenshot_2.jpg
+Γ£à Created: test_images/screenshot_3.jpg
+
+Running backend pipeline with 3 images...
+
+============================================================
+≡ƒÜÇ Starting Hinge Review Job: 809e8e12
+============================================================
+
+[STAGE 1] Screenshot Scout Agent (Groq Vision)
+
+Γ¥î Pipeline failed: GROQ_API_KEY environment variable is required.

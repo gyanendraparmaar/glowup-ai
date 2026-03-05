@@ -12,12 +12,49 @@ class ImageAnalysisMCP:
     """MCP-style tool server for analyzing photos using Gemini vision."""
 
     @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
-    def _call_api(self, model: str, contents: list):
-        client = genai.Client(api_key=config.GEMINI_API_KEY)
-        return client.models.generate_content(
-            model=model,
-            contents=contents,
-        )
+    async def _call_api(self, model: str, contents: list):
+        from groq import AsyncGroq
+        import base64
+        from io import BytesIO
+        
+        client = AsyncGroq(api_key=config.GROQ_API_KEY)
+        
+        groq_content = []
+        for item in contents:
+            if isinstance(item, str):
+                groq_content.append({"type": "text", "text": item})
+            else:
+                # Resize to fit Groq limits and convert to base64
+                if max(item.size) > 1024:
+                    item.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
+                buffered = BytesIO()
+                if item.mode != 'RGB':
+                    item = item.convert('RGB')
+                item.save(buffered, format="JPEG")
+                img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+                groq_content.append({
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{img_str}"}
+                })
+                
+        print(f"       [?] Sending Groq request to model: {model}...")
+        try:
+            response = await client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": groq_content}],
+                temperature=0.2
+            )
+            print(f"       [✓] Groq response received.")
+            
+            class MockResponse:
+                @property
+                def text(self):
+                    return response.choices[0].message.content
+                    
+            return MockResponse()
+        except Exception as e:
+            print(f"       [X] Groq Error: {e}")
+            raise
 
     async def analyze_photo(self, image_path: str) -> dict:
         """Deep analysis of a photo: face, pose, lighting, setting, clothing, issues.
@@ -64,8 +101,8 @@ class ImageAnalysisMCP:
         it has strong flash, choose '1990s_camera_flash').
         """
 
-        response = self._call_api(
-            model=config.PROMPT_MODEL,
+        response = await self._call_api(
+            model=config.GROQ_VISION_MODEL,
             contents=[img, prompt_text],
         )
 
@@ -90,18 +127,28 @@ class ImageAnalysisMCP:
             }
 
     async def compare_photos(
-        self, original_path: str, generated_bytes: bytes
+        self, 
+        original_path: str, 
+        generated_bytes: bytes,
+        mode: str = "enhance",
+        vibe: str | None = None
     ) -> dict:
-        """Compare original and generated photo for identity match & quality."""
+        """Compare original and generated photo for identity match, quality & context."""
         original = Image.open(original_path)
         generated = Image.open(BytesIO(generated_bytes))
+        
+        # Contextual constraint string
+        if mode == "vibe" and vibe:
+            bg_instruction = f"Is the background/setting broadly appropriate for the requested '{vibe}' vibe? (true/false)"
+        else:
+            bg_instruction = "Are they in the exact same setting/background? (true/false. True if it's the exact same place, just better lit/framed)."
 
-        response = self._call_api(
-            model=config.QUALITY_MODEL,
+        response = await self._call_api(
+            model=config.GROQ_VISION_MODEL,
             contents=[
                 generated,
                 original,
-                """You are an expert photo forensics analyst. Image 1 is potentially
+                f"""You are an expert photo forensics analyst. Image 1 is potentially
                 AI-generated. Image 2 is the original real photo of the same person.
 
                 Evaluate Image 1 on these criteria (1-10 each):
@@ -113,25 +160,33 @@ class ImageAnalysisMCP:
                 5. AI_DETECTION_RISK: How likely would someone suspect AI?
                    (1 = definitely looks real, 10 = obviously AI)
                 6. ENHANCEMENT_QUALITY: Is it clearly better than the original?
+                
+                Also evaluate these STRICT PRESERVATION BOOLEANS (true/false):
+                7. BACKGROUND_PRESERVED: {bg_instruction}
+                8. CLOTHING_PRESERVED: Are they wearing the EXACT same clothing? (true/false)
+                9. COMPANIONS_PRESERVED: If there are other people in Image 2, are they all STILL PRESENT in Image 1? (true/false. Also true if ONLY one person is in Image 2).
 
                 Also list SPECIFIC issues if any (e.g., "left hand has 6 fingers",
                 "skin too smooth on forehead", "eyes lack reflections").
 
                 Return ONLY valid JSON:
-                {
-                    "realism": X,
-                    "identity_match": X,
-                    "naturalness": X,
-                    "attractiveness": X,
-                    "ai_detection_risk": X,
-                    "enhancement_quality": X,
-                    "overall": X,
+                {{
+                    "realism": 0,
+                    "identity_match": 0,
+                    "naturalness": 0,
+                    "attractiveness": 0,
+                    "ai_detection_risk": 0,
+                    "enhancement_quality": 0,
+                    "overall": 0,
+                    "background_preserved": true,
+                    "clothing_preserved": true,
+                    "companions_preserved": true,
                     "issues": ["issue1", "issue2"],
-                    "verdict": "PASS" or "FAIL",
-                    "fix_suggestions": ["suggestion1", "suggestion2"]
-                }
+                    "verdict": "PASS",
+                    "fix_suggestions": ["suggestion1"]
+                }}
 
-                PASS requires: overall >= 7 AND ai_detection_risk <= 3
+                PASS requires: overall >= 7 AND ai_detection_risk <= 3 AND all booleans are true.
                 """,
             ],
         )
@@ -146,6 +201,9 @@ class ImageAnalysisMCP:
                 "realism": 0, "identity_match": 0, "naturalness": 0,
                 "attractiveness": 0, "ai_detection_risk": 10,
                 "enhancement_quality": 0, "overall": 0,
+                "background_preserved": False,
+                "clothing_preserved": False,
+                "companions_preserved": False,
                 "issues": ["Quality check response was not valid JSON"],
                 "verdict": "FAIL",
                 "fix_suggestions": ["Re-generate with stronger realism instructions"],
