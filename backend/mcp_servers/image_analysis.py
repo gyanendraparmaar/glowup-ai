@@ -1,17 +1,28 @@
+from __future__ import annotations
 """Image Analysis MCP Server — uses Gemini for deep photo analysis."""
 
+import json
+import logging
 from io import BytesIO
 from PIL import Image
 import google.genai as genai
-import json
 from tenacity import retry, stop_after_attempt, wait_exponential
 from config import config
+
+logger = logging.getLogger("glowup.image_analysis")
 
 
 class ImageAnalysisMCP:
     """MCP-style tool server for analyzing photos using Gemini vision."""
 
-    @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
+    @retry(
+        stop=stop_after_attempt(config.RETRY_MAX_ATTEMPTS),
+        wait=wait_exponential(
+            multiplier=config.RETRY_MULTIPLIER,
+            min=config.RETRY_MIN_WAIT,
+            max=config.RETRY_MAX_WAIT,
+        ),
+    )
     def _call_api(self, model: str, contents: list):
         client = genai.Client(api_key=config.GEMINI_API_KEY)
         return client.models.generate_content(
@@ -20,14 +31,9 @@ class ImageAnalysisMCP:
         )
 
     async def analyze_photo(self, image_path: str) -> dict:
-        """Deep analysis of a photo: face, pose, lighting, setting, clothing, issues.
-
-        Returns a structured dict with analysis results, including a matching
-        Awesome Nano Banana Pro style category.
-        """
+        """Deep analysis of a photo: face, pose, lighting, setting, clothing, issues."""
         img = Image.open(image_path)
 
-        # Fetch available styles to inject into prompt
         from mcp_servers.style_library import StyleLibraryMCP
         library = StyleLibraryMCP()
         style_instructions = await library.get_style_instructions()
@@ -74,7 +80,12 @@ class ImageAnalysisMCP:
             if text.startswith("```"):
                 text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
             return json.loads(text)
-        except (json.JSONDecodeError, IndexError):
+        except (json.JSONDecodeError, IndexError) as e:
+            logger.warning(
+                "analyze_photo JSON parse failed: %s | raw_response: %.300s",
+                str(e),
+                response.text[:300] if response.text else "(empty)",
+            )
             return {
                 "gender": "unknown",
                 "pose": "unknown",
@@ -141,7 +152,12 @@ class ImageAnalysisMCP:
             if text.startswith("```"):
                 text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
             return json.loads(text)
-        except (json.JSONDecodeError, IndexError):
+        except (json.JSONDecodeError, IndexError) as e:
+            logger.warning(
+                "compare_photos JSON parse failed: %s | raw_response: %.300s",
+                str(e),
+                response.text[:300] if response.text else "(empty)",
+            )
             return {
                 "realism": 0, "identity_match": 0, "naturalness": 0,
                 "attractiveness": 0, "ai_detection_risk": 10,

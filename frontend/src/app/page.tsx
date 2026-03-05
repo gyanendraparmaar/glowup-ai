@@ -139,7 +139,7 @@ export default function Home() {
         if (selectedVibe) formData.append("vibe", selectedVibe);
         formData.append("num_variations", String(numVariations));
 
-        const response = await fetch("/api/enhance", {
+        const response = await fetch("/api/enhance/sync", {
           method: "POST",
           body: formData,
         });

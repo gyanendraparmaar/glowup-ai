@@ -1,11 +1,14 @@
 from __future__ import annotations
 """Prompt Architect Agent — analyzes all inputs and writes the perfect prompt."""
 
+import logging
 from PIL import Image
 import google.genai as genai
 from mcp_servers.prompt_library import PromptLibraryMCP
 from config import config
 from tenacity import retry, stop_after_attempt, wait_exponential
+
+logger = logging.getLogger("glowup.prompt_architect")
 
 
 class PromptArchitectAgent:
@@ -17,7 +20,14 @@ class PromptArchitectAgent:
         - Prompt Library MCP (retrieve successful past prompts + realism rules)
     """
 
-    @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
+    @retry(
+        stop=stop_after_attempt(config.RETRY_MAX_ATTEMPTS),
+        wait=wait_exponential(
+            multiplier=config.RETRY_MULTIPLIER,
+            min=config.RETRY_MIN_WAIT,
+            max=config.RETRY_MAX_WAIT,
+        ),
+    )
     def _call_api(self, contents):
         client = genai.Client(api_key=config.GEMINI_API_KEY)
         return client.models.generate_content(
@@ -57,8 +67,7 @@ class PromptArchitectAgent:
         # Handle aesthetic style categorization
         from mcp_servers.style_library import StyleLibraryMCP
         style_library = StyleLibraryMCP()
-        
-        style_category = None
+
         style_data = None
         if photo_analysis and "style_category" in photo_analysis:
             style_category = photo_analysis["style_category"]
@@ -87,10 +96,10 @@ class PromptArchitectAgent:
             style_injection = f"""
             AESTHETIC STYLE GOAL: {style_data['name']}
             {style_data['description']}
-            
+
             YOU MUST seamlessly integrate the following specific aesthetic phrasing into
             your final generated prompt (adjusting subject descriptions to match Image 1):
-            
+
             "{style_data['instruction']}"
             """
 
@@ -142,8 +151,7 @@ class PromptArchitectAgent:
 
         # Add enhancement patterns
         patterns_text = "\n".join(f"- {p}" for p in enhancement_patterns)
-        
-        # NOTE: Fixed formatting issue where `response =` was accidentally included in the f-string in the previous implementation
+
         prompt_construction = f"""{task}
 
         {past_context}
@@ -166,11 +174,12 @@ class PromptArchitectAgent:
         Be EXTREMELY specific. Every detail matters for realism.
         Make absolutely sure the SUBJECT description matches the uploaded photo exactly!
         """
-        
+
         contents.append(prompt_construction)
-        
+
         response = self._call_api(contents)
 
+        logger.info("prompt_architect.generated chars=%d", len(response.text))
         return response.text
 
     async def fix_prompt(
@@ -180,21 +189,10 @@ class PromptArchitectAgent:
         issues: list[str],
         vibe: str | None = None,
     ) -> str:
-        """Rewrite a prompt to fix specific quality issues found by the Inspector.
-
-        Args:
-            original_path: Path to user's original photo
-            original_prompt: The prompt that produced the failed image
-            issues: List of specific issues to fix
-            vibe: Optional vibe if in vibe mode
-
-        Returns:
-            Rewritten prompt that addresses the issues
-        """
+        """Rewrite a prompt to fix specific quality issues found by the Inspector."""
         photo = Image.open(original_path)
         issues_text = "\n".join(f"- {issue}" for issue in issues)
 
-        # Pre-compute realism rules (can't await inside f-string)
         realism_rules = await self.library.get_realism_rules()
         vibe_instruction = f"The desired vibe is: {vibe}" if vibe else "Enhance the existing scene."
 
@@ -216,4 +214,5 @@ class PromptArchitectAgent:
             """,
         ])
 
+        logger.info("prompt_architect.fixed chars=%d issues=%d", len(response.text), len(issues))
         return response.text

@@ -1,10 +1,13 @@
 from __future__ import annotations
 """Image Enhancer Agent — generates enhanced images using Nano Banana Pro."""
 
+import logging
 from PIL import Image
 import google.genai as genai
 from tenacity import retry, stop_after_attempt, wait_exponential
 from config import config
+
+logger = logging.getLogger("glowup.image_enhancer")
 
 
 class ImageEnhancerAgent:
@@ -15,7 +18,14 @@ class ImageEnhancerAgent:
     The intelligence is in the Prompt Architect.
     """
 
-    @retry(stop=stop_after_attempt(12), wait=wait_exponential(multiplier=2, min=15, max=120))
+    @retry(
+        stop=stop_after_attempt(config.RETRY_MAX_ATTEMPTS),
+        wait=wait_exponential(
+            multiplier=config.RETRY_MULTIPLIER,
+            min=config.RETRY_MIN_WAIT,
+            max=config.RETRY_MAX_WAIT,
+        ),
+    )
     def _call_api(self, contents, temperature):
         client = genai.Client(api_key=config.GEMINI_API_KEY)
         return client.models.generate_content(
@@ -72,9 +82,9 @@ class ImageEnhancerAgent:
                     if part.inline_data and part.inline_data.data:
                         return part.inline_data.data
 
-            print("     [!] No image in response")
+            logger.warning("enhance: no image in response")
             return None
 
         except Exception as e:
-            print(f"     [ERROR] Generation error: {e}")
+            logger.error("enhance: generation error: %s", str(e))
             return None
