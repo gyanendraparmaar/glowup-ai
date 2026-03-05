@@ -7,14 +7,14 @@ import uuid
 async def run_review_pipeline(image_paths: List[str]) -> Dict[str, Any]:
     """
     Run the two-stage Hinge Profile Review pipeline:
-      1. Screenshot Scout (Groq Vision) -> Extracts text and photo details
-      2. Profile Reviewer (Gemini 2.5 Pro) -> Generates actionable strategic advice
+      1. Screenshot Scout (Groq Llama Vision) -> Extracts text and photo details
+      2. Profile Reviewer (Groq Llama 3.3 70B) -> Generates actionable strategic advice
       
     Args:
         image_paths: List of absolute paths to the uploaded screenshots
         
     Returns:
-        The final strategic JSON advice from Gemini.
+        The final strategic JSON advice.
     """
     job_id = str(uuid.uuid4())[:8]
     print(f"\n{'=' * 60}")
@@ -22,14 +22,14 @@ async def run_review_pipeline(image_paths: List[str]) -> Dict[str, Any]:
     print(f"{'=' * 60}")
 
     # Stage 1: Groq Vision Extraction
-    print(f"\n[STAGE 1] Screenshot Scout Agent (Groq Vision)")
+    print(f"\n[STAGE 1] Screenshot Scout Agent (Groq Llama Vision)")
     scout = ScreenshotScoutAgent()
     extracted_data = await scout.analyze_screenshots(image_paths)
     
     print(f"  ✅ Extracted {len(extracted_data.get('photos', []))} photos and {len(extracted_data.get('prompts', []))} prompts.")
     
-    # Stage 2: Gemini Strategy Review
-    print(f"\n[STAGE 2] Profile Reviewer Agent (Gemini API)")
+    # Stage 2: Groq Strategy Review
+    print(f"\n[STAGE 2] Profile Reviewer Agent (Groq Llama 3.3 70B)")
     reviewer = ProfileReviewerAgent()
     final_review = await reviewer.generate_review(extracted_data)
     

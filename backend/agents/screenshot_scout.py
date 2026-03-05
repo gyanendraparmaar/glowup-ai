@@ -1,27 +1,25 @@
 import os
 from typing import List, Dict, Any
-from google import genai
-from google.genai import types
+from openai import OpenAI
 import json
+import base64
 
 class ScreenshotScoutAgent:
-    def __init__(self, api_key: str = None):
-        # We will use Gemini for vision since the Groq key lacks vision access
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY")
+    def __init__(self):
+        self.api_key = os.getenv("GROQ_API_KEY")
         if not self.api_key:
-            keys = os.getenv("GEMINI_API_KEYS", "").split(",")
-            if keys and keys[0]:
-                self.api_key = keys[0]
-            else:
-                 raise ValueError("GEMINI_API_KEY environment variable is required.")
-        self.client = genai.Client(api_key=self.api_key)
-        self.model = "gemini-2.5-flash"
+            raise ValueError("GROQ_API_KEY environment variable is required.")
+        self.client = OpenAI(
+            api_key=self.api_key,
+            base_url="https://api.groq.com/openai/v1"
+        )
+        self.model = "meta-llama/llama-4-scout-17b-16e-instruct"
 
     async def analyze_screenshots(self, image_paths: List[str]) -> Dict[str, Any]:
         """
-        Takes a list of screenshot paths and uses Gemini Vision to extract text and describe the user's photos.
+        Takes a list of screenshot paths and uses Groq Llama Vision to extract text and describe the user's photos.
         """
-        print(f"🕵️‍♂️ [ScreenshotScout] Analyzing {len(image_paths)} screenshots via Gemini Vision...")
+        print(f"🕵️‍♂️ [ScreenshotScout] Analyzing {len(image_paths)} screenshots via Groq Vision...")
         
         system_instruction = (
             "You are an expert dating profile analyst. The user has uploaded screenshots of their Hinge profile. "
@@ -54,61 +52,53 @@ class ScreenshotScoutAgent:
         from PIL import Image
         import io
 
-        # We need to pass the images to Gemini
-        contents = ["Extract the profile information from these screenshots."]
+        # Build message content with images as base64 data URIs
+        content_parts = [
+            {"type": "text", "text": "Extract the profile information from these Hinge screenshots."}
+        ]
+        
         for path in image_paths:
-             # Compress slightly to avoid massive payloads, though Gemini handles large files better
-             with Image.open(path) as img:
-                 if img.mode in ("RGBA", "P"):
-                     img = img.convert("RGB")
-                 img.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
-                 buffer = io.BytesIO()
-                 img.save(buffer, format="JPEG", quality=85)
-                 contents.append(
-                     types.Part.from_bytes(
-                         data=buffer.getvalue(),
-                         mime_type="image/jpeg",
-                     )
-                 )
+            with Image.open(path) as img:
+                if img.mode in ("RGBA", "P"):
+                    img = img.convert("RGB")
+                img.thumbnail((1024, 1024), Image.Resampling.LANCZOS)
+                buffer = io.BytesIO()
+                img.save(buffer, format="JPEG", quality=80)
+                buffer.seek(0)
+                b64_image = base64.b64encode(buffer.read()).decode("utf-8")
+                content_parts.append({
+                    "type": "image_url",
+                    "image_url": {
+                        "url": f"data:image/jpeg;base64,{b64_image}"
+                    }
+                })
 
         import asyncio
         loop = asyncio.get_event_loop()
-        
-        # Support multiple keys for round-robin if rate limited
-        keys_to_try = [self.api_key]
-        env_keys = os.getenv("GEMINI_API_KEYS", "").split(",")
-        keys_to_try.extend([k for k in env_keys if k and k != self.api_key])
-        
-        max_retries = len(keys_to_try)
-        
-        for attempt in range(max_retries):
-            try:
-                # Update client with the current key to try
-                current_key = keys_to_try[attempt]
-                self.client = genai.Client(api_key=current_key)
-                
-                response = await loop.run_in_executor(
-                        None,
-                        lambda: self.client.models.generate_content(
-                            model=self.model,
-                            contents=contents,
-                            config=types.GenerateContentConfig(
-                                system_instruction=system_instruction,
-                                temperature=0.2,
-                                response_mime_type="application/json"
-                            )
-                        )
-                    )
-                
-                result_text = response.text
-                return json.loads(result_text.strip())
 
-            except Exception as e:
-                if "429" in str(e) and attempt < max_retries - 1:
-                    print(f"⚠️ [ScreenshotScout] Rate limited (429). Rotating API key (attempt {attempt + 1}/{max_retries})...")
-                    await asyncio.sleep(2) # brief pause before switching key
-                    continue
-                else:
-                    print(f"❌ [ScreenshotScout] Error during extraction (attempt {attempt + 1}): {e}")
-                    raise
+        try:
+            response = await loop.run_in_executor(
+                None,
+                lambda: self.client.chat.completions.create(
+                    model=self.model,
+                    messages=[
+                        {"role": "system", "content": system_instruction},
+                        {"role": "user", "content": content_parts}
+                    ],
+                    temperature=0.2,
+                    max_tokens=4096
+                )
+            )
 
+            result_text = response.choices[0].message.content
+            # Clean up markdown fences if present
+            if result_text.startswith("```"):
+                result_text = result_text.split("\n", 1)[1].rsplit("```", 1)[0]
+            print(f"✅ [ScreenshotScout] Extraction complete.")
+            return json.loads(result_text.strip())
+
+        except Exception as e:
+            print(f"❌ [ScreenshotScout] Error during extraction: {e}")
+            import traceback
+            traceback.print_exc()
+            raise

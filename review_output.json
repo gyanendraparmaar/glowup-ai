@@ -1,0 +1,88 @@
+{
+  "photo_review": [
+    {
+      "id": 1,
+      "critique": "This is a decent full-body shot, showing you in an active, scenic environment. The lighting is good, and it gives a sense of adventure. However, it's not a strong lead photo. Your face isn't clearly visible, and there's no direct eye contact or smile to draw people in. It's a 'vibe' photo, not an 'introduction' photo.",
+      "is_keeper": true
+    },
+    {
+      "id": 2,
+      "critique": "Another full-body shot, but the sunglasses obscure your face entirely. While the background is interesting, people want to see *you*. This photo tells me nothing about your smile or eye expression, which are crucial for connection. The pose is also quite stiff.",
+      "is_keeper": false
+    },
+    {
+      "id": 3,
+      "critique": "This is a great activity shot, showing you engaged in a hobby and highlighting a cool travel experience. It adds dimension to your profile. However, similar to the others, your face is completely covered by sunglasses and winter gear. It's a good supporting photo, but you need face-forward shots elsewhere.",
+      "is_keeper": true
+    },
+    {
+      "id": 4,
+      "critique": "Absolutely not. This is a classic Hinge profile killer. A bathroom mirror selfie, looking at your phone, is the epitome of low effort and poor judgment. It's unflattering, shows you're not taking your profile seriously, and needs to be removed immediately.",
+      "is_keeper": false
+    },
+    {
+      "id": 5,
+      "critique": "Another mirror selfie, this time in what appears to be a public restroom. This is even worse than the last one. Holding your phone to your face, poor lighting, and a generic pose. Two mirror selfies in one profile is a huge red flag and signals a lack of better photos. Delete this yesterday.",
+      "is_keeper": false
+    },
+    {
+      "id": 6,
+      "critique": "Group photos are tricky, and this one doesn't work. It's dark, you're with a friend, and both of your faces are partially obscured by glasses and playful poses. It's hard to tell who you are, and it doesn't give a clear sense of your personality or looks. It's too chaotic for a dating profile.",
+      "is_keeper": false
+    }
+  ],
+  "prompt_review": [
+    {
+      "question": "Most exotic place I've been",
+      "critique": "Attaching a photo instead of writing an answer is a fundamental misunderstanding of how Hinge prompts work. The photo is a visual aid, but the text is where you show personality, wit, and create a conversation starter. This is a wasted opportunity.",
+      "suggested_rewrite": "Bali, hands down. Picture this: ancient temples, lush rice paddies, and the kind of sunsets that make you question all your life choices (in a good way)."
+    },
+    {
+      "question": "My submission to National Geographic",
+      "critique": "Again, you've attached a photo without a text answer. This tells me nothing about your perspective, sense of humor, or what you find interesting. It's a blank canvas you left empty.",
+      "suggested_rewrite": "A candid shot of a snow leopard, moments before it gracefully face-planted into a snowdrift. Because even majestic creatures have their clumsy moments, and so do I."
+    },
+    {
+      "question": "My simple pleasures",
+      "critique": "This is a step in the right direction because you actually wrote something! 'Cardio after every workout. Coz I want to feel like Milkha Singh once a day.' It's specific, but 'Milkha Singh' might be too niche for a global audience to immediately grasp. It's also a bit dry; it doesn't invite conversation beyond 'Oh, you like running?'",
+      "suggested_rewrite": "That post-cardio high, when my brain finally lets me believe I could outrun a cheetah (spoiler: I can't). Also, perfectly ripe mangoes and finding a new sci-fi series to binge."
+    },
+    {
+      "question": "Don't judge me",
+      "critique": "Another prompt with just a photo. This prompt is specifically designed for a playful, slightly embarrassing, or quirky confession that makes you relatable. You've completely missed the mark by leaving it blank.",
+      "suggested_rewrite": "I still sing along to early 2000s pop-punk in the shower like it's my last concert. And yes, I know all the lyrics."
+    },
+    {
+      "question": "Dating me is like",
+      "critique": "'Software updates, it might take a while but you\u2019ll end up in a place you haven\u2019t been.' This is clever and hints at your profession, but 'might take a while' can sound like you're slow to commit or emotionally unavailable. The 'end up in a place you haven\u2019t been' is intriguing but could also be interpreted negatively (e.g., 'a bad place'). It needs to be more unequivocally positive and exciting.",
+      "suggested_rewrite": "Upgrading to the latest operating system \u2013 smooth, exciting, and full of unexpected new features you'll wonder how you lived without. Plus, no annoying pop-ups (unless you count my terrible puns)."
+    }
+  ],
+  "overall_score": 2,
+  "actionable_advice": [
+    "**Get a proper first photo**: Your absolute top priority is a clear, smiling headshot where you make eye contact. No sunglasses, no group photos, no action shots. Just you, looking friendly and approachable.",
+    "**Eliminate ALL mirror selfies**: Photos 4 and 5 are instant 'left swipes'. They are low-effort, unflattering, and universally disliked. Replace them with photos taken by friends, family, or a timer.",
+    "**Write actual answers for your prompts**: Prompts 1, 2, and 4 are completely wasted. Hinge is about conversation. Use the text space to show your personality, sense of humor, and what you're passionate about. Don't just attach a photo.",
+    "**Diversify your photo selection**: You need a mix: a clear headshot, a full-body shot (not a mirror selfie), an activity shot, and a social photo where you are clearly identifiable and smiling. Get rid of group photos where you're not the clear focus.",
+    "**Refine your existing prompt answers**: Make them more specific, playful, and universally understandable. Avoid niche references without context, and rephrase anything that could be misinterpreted negatively."
+  ],
+  "suggested_openers": [
+    "Your profile has me curious \u2013 what's the most unexpected 'software update' you've ever had in your own life?",
+    "Okay, so Milkha Singh vibes! What's your go-to pump-up song when you're hitting that post-workout cardio?",
+    "That mountain photo looks incredible! What's one place on your bucket list that you're dying to explore next?"
+  ],
+  "suggested_prompts": [
+    {
+      "prompt_name": "Together, we could...",
+      "suggested_answer": "Debate whether pineapple belongs on pizza (it does), find the best street food in Bangalore, and plan our next 'National Geographic' worthy adventure."
+    },
+    {
+      "prompt_name": "My greatest strength",
+      "suggested_answer": "My ability to turn any situation into a slightly awkward but endearing dad joke. Also, I can debug pretty much anything (including your streaming service when it inevitably buffers)."
+    },
+    {
+      "prompt_name": "I'm looking for...",
+      "suggested_answer": "Someone who appreciates a good adventure, doesn't mind my questionable dance moves, and can hold their own in a conversation about anything from tech to travel."
+    }
+  ]
+}

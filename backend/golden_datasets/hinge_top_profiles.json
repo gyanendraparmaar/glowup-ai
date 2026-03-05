@@ -1,0 +1,197 @@
+{
+    "metadata": {
+        "description": "Golden dataset of best-performing Hinge profile strategies compiled from dating coaches and viral profile breakdowns across roast.dating, cosmopolitan.com, hitched.co.uk, hercampus.com, and textgod.com (2024-2025).",
+        "sources": [
+            "https://roast.dating/blog/hinge-profile-tips",
+            "https://www.cosmopolitan.com/sex-love/a46185548/best-hinge-prompt-answers/",
+            "https://www.hitched.co.uk/dating/apps/best-hinge-prompts/",
+            "https://www.hercampus.com/life/best-hinge-prompt-answers/",
+            "https://www.textgod.com/best-hinge-answers",
+            "https://www.profilehelper.com/blog/best-hinge-prompt-answers"
+        ],
+        "last_updated": "2025-03"
+    },
+    "photo_golden_rules": {
+        "source": "roast.dating, wikihow, doulike.com",
+        "rules": [
+            {
+                "rule": "Lead with a clear headshot",
+                "detail": "First photo MUST be a well-lit, recent shoulder-up portrait with a genuine smile and direct eye contact. No sunglasses, no hats, no group shots as photo #1.",
+                "why": "Eye contact builds instant trust and warmth. Profiles with smiling headshots as the lead get 20%+ more likes."
+            },
+            {
+                "rule": "Include a full-body shot",
+                "detail": "At least one photo should show your full body in a natural, confident pose—like walking, standing at an event, or during an activity.",
+                "why": "Transparency builds trust. Profiles without full-body shots get significantly fewer matches."
+            },
+            {
+                "rule": "Show a hobby or activity in action",
+                "detail": "Include a candid shot of you doing something you love: playing guitar, hiking, cooking, surfing, painting, at a concert.",
+                "why": "Activity shots give conversation starters and show you're an interesting, 3-dimensional person."
+            },
+            {
+                "rule": "Use a social proof photo (but be identifiable)",
+                "detail": "One group photo max—where you are clearly identifiable. Wedding, party, or dinner with friends works well.",
+                "why": "Shows you have a healthy social life without making the viewer play 'Where's Waldo'."
+            },
+            {
+                "rule": "Add a candid personality shot",
+                "detail": "A slightly goofy, relaxed, unstaged photo. Caught mid-laugh, pulling a face, or in a silly situation.",
+                "why": "Shows you don't take yourself too seriously. High relatability score."
+            },
+            {
+                "rule": "Leverage all 6 photo slots",
+                "detail": "Hinge allows 6 photos. Use all of them. Each should show a different facet of your life.",
+                "why": "Profiles with all 6 slots filled massively outperform profiles with 3-4 photos."
+            }
+        ],
+        "anti_patterns": [
+            "Mirror selfies (especially gym mirror selfies)",
+            "Photos with sunglasses as the primary photo",
+            "Blurry or dark photos",
+            "Photos where you are not clearly identifiable",
+            "Multiple group photos where viewer can't tell who you are",
+            "Shirtless bathroom photos (unless context is beach/pool)",
+            "All photos taken in the same location/outfit",
+            "Heavy filters or heavy editing",
+            "Photos with other potential romantic interests"
+        ]
+    },
+    "prompt_golden_rules": {
+        "source": "cosmopolitan.com, hitched.co.uk, hercampus.com, textgod.com",
+        "rules": [
+            {
+                "rule": "Be specific, never generic",
+                "detail": "Don't say 'I love food'. Say 'I will argue to the death that the best Al Pastor tacos are in a tiny shop in East LA that has no sign.'",
+                "why": "Specificity is memorable. Generic answers like 'I love pizza and dogs' get swiped past instantly."
+            },
+            {
+                "rule": "Invite conversation, don't monologue",
+                "detail": "End prompts with implicit or explicit hooks. E.g., 'First round is on me if... you can beat me at bowling. I'll accept Wii Bowling.'",
+                "why": "The best prompts make it easy for the other person to comment on or Like."
+            },
+            {
+                "rule": "Balance humor with substance",
+                "detail": "At least one prompt should show personality/humor, and at least one should show depth/values/ambitions.",
+                "why": "All jokes = hard to take seriously. All serious = feels heavy. Mix is key."
+            },
+            {
+                "rule": "Show, don't tell",
+                "detail": "Don't say 'I'm adventurous'. Say 'Last month I booked a one-way flight to Portugal with no plan.'",
+                "why": "Stories > adjectives. Always."
+            },
+            {
+                "rule": "Optimal length: 100-200 characters",
+                "detail": "Not one-word answers. Not essays. A punchy 1-2 sentence answer that packs personality.",
+                "why": "profilehelper.com data shows 100-200 char answers get the best response rates."
+            },
+            {
+                "rule": "Avoid clichés and negativity",
+                "detail": "Never use: 'Looking for my partner in crime', 'Here for a good time not a long time', 'Fluent in sarcasm', or any complaints about dating apps.",
+                "why": "These are on every third profile. They say nothing unique about you."
+            }
+        ],
+        "anti_patterns": [
+            "'Looking for my partner in crime'",
+            "'I love to laugh'",
+            "'Fluent in sarcasm'",
+            "'Here for a good time not a long time'",
+            "'Just ask'",
+            "'I love food / travel / dogs' (without any specificity)",
+            "Negative statements about exes or dating apps",
+            "One-word answers",
+            "Listing adjectives instead of showing personality"
+        ]
+    },
+    "top_performing_prompt_examples": {
+        "source": "hercampus.com, hitched.co.uk, cosmopolitan.com, textgod.com",
+        "examples": [
+            {
+                "prompt": "Dating me is like...",
+                "answer": "Having TSA Pre-Check. Premium experience, no waiting.",
+                "why_it_works": "Witty metaphor. Implies they're high-value without being arrogant. Easy to laugh at."
+            },
+            {
+                "prompt": "Dating me is like...",
+                "answer": "Finding a pair of jeans that fit perfectly on the first try.",
+                "why_it_works": "Relatable, positive, subtly confident."
+            },
+            {
+                "prompt": "My most irrational fear...",
+                "answer": "That every spider I've ever failed to capture has reported back and they're plotting collective revenge.",
+                "why_it_works": "Absurdist humor. Shows creativity and lightness, easy to comment on."
+            },
+            {
+                "prompt": "Together, we could...",
+                "answer": "Blindly point at a map, buy plane tickets, and see what happens. Or just get Thai food down the street.",
+                "why_it_works": "Shows ambition AND groundedness. The pivot from adventurous to realistic is charming."
+            },
+            {
+                "prompt": "First round is on me if...",
+                "answer": "You can beat me at bowling. I'll accept Wii Bowling.",
+                "why_it_works": "Immediate date idea built in. Playful, competitive, and shows personality."
+            },
+            {
+                "prompt": "A shower thought I recently had...",
+                "answer": "If we aren't meant to have midnight snacks, why is there a light in the fridge?",
+                "why_it_works": "Relatable absurdist humor. Makes the reader smile immediately."
+            },
+            {
+                "prompt": "We'll get along if...",
+                "answer": "You appreciate the small things. So… guppies.",
+                "why_it_works": "Starts sincere, lands a punchline. Shows wit."
+            },
+            {
+                "prompt": "I bet you can't...",
+                "answer": "Refuse a second date with me.",
+                "why_it_works": "Bold confidence without being arrogant. It's playful."
+            },
+            {
+                "prompt": "I bet you can't...",
+                "answer": "Make better pancakes than me.",
+                "why_it_works": "Implies domestic skill. Invites a fun competitive challenge."
+            },
+            {
+                "prompt": "I go crazy for...",
+                "answer": "A perfect sunset, freshly baked sourdough, and anyone who can beat me at Scrabble.",
+                "why_it_works": "Specific, sensory. The triad structure is memorable."
+            },
+            {
+                "prompt": "This year, I really want to...",
+                "answer": "Have at least one random adventure per month. Fancy axe throwing?",
+                "why_it_works": "Shows initiative, includes a date idea, invites the reader in."
+            },
+            {
+                "prompt": "The one thing I'd love to know about you is...",
+                "answer": "Which Hogwarts house you'd be in. It's always good to know upfront if I'm dating a Slytherin.",
+                "why_it_works": "Pop culture reference. Invites immediate engagement. Shows playfulness."
+            }
+        ]
+    },
+    "overall_profile_archetypes": {
+        "source": "Compiled from all sources",
+        "archetypes": [
+            {
+                "name": "The Adventurous Professional",
+                "score_range": "9-10",
+                "photo_mix": "Clear smiling headshot → full-body at scenic location → action shot (hiking/surfing) → dressed-up formal event → candid with friends → goofy/fun candid",
+                "prompt_vibe": "Confident, specific, invites activities. Uses prompts like 'Together we could...' and 'First round is on me if...' with real date ideas baked in.",
+                "overall_feel": "High social proof, physically active, ambitious but approachable. Does not take themselves too seriously."
+            },
+            {
+                "name": "The Creative Intellectual",
+                "score_range": "8.5-9.5",
+                "photo_mix": "Candid in artsy environment → reading/music/creative pursuit → pet photo (high quality) → non-cliché travel photo → well-dressed event photo → natural light portrait",
+                "prompt_vibe": "Witty, slightly dry humor. References niche interests that invite curiosity. Uses prompts like 'A shower thought I recently had...' and 'I geek out on...'",
+                "overall_feel": "Thoughtful, aesthetically pleasing, intellectually stimulating. Avoids gym selfies or aggressive tropes."
+            },
+            {
+                "name": "The Warm Social Butterfly",
+                "score_range": "8.5-9",
+                "photo_mix": "Incredibly warm genuine smile → activity shot (concert/sport) → 'Sunday morning' relaxed photo (farmer's market/dog walk) → friends group → travel → close-up portrait",
+                "prompt_vibe": "Focused on shared experiences. Uses 'Together we could...' and 'We'll get along if...' with emphasis on fun and connection over flexing.",
+                "overall_feel": "Extroverted, fun, easy-going, emotionally available. Profile screams 'this person is fun to be around'."
+            }
+        ]
+    }
+}
